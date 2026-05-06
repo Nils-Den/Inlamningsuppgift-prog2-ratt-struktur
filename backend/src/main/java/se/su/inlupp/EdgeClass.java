@@ -1,9 +1,11 @@
-public class EdgeClass implements Edge {
+package se.su.inlupp;
+
+public class EdgeClass<T> implements Edge<T> {
     private T destination;
     private String name;
     private int weight;
 
-    public Edge(T destination, String name, int weight){
+    public EdgeClass(T destination, String name, int weight){
         this.destination = destination;
         this.name = name;
         this.weight = weight;
@@ -19,7 +21,7 @@ public class EdgeClass implements Edge {
     }
     // getWeight – returnerar kantens vikt.
 
-    void setWeight(int weight) {
+    public void setWeight(int weight) {
         if (weight < 0) {
             throw new IllegalArgumentException("Weight can't be negative.");
         } else {
@@ -29,7 +31,7 @@ public class EdgeClass implements Edge {
     // setWeight – s¨atter kantens vikt. Om vikten ¨ar negativ skall undantaget
     // IllegalArgumentException genereras.
 
-    String getName() {
+    public String getName() {
         return name;
     }
     // • getName – returnerar kantens namn.

@@ -63,7 +63,14 @@ public class ListGraph<T> implements Graph<T> {
 
   @Override
   public Edge<T> getEdgeBetween(T node1, T node2) {
-    throw new UnsupportedOperationException("Unimplemented method 'getEdgeBetween'");
+    Set<EdgeClass> edgesFrom1 = graphMap.get(node1);
+    for (Edge<T> e : edgesFrom1){
+      if (e.getDestination().equals(node2)){
+        return e;
+      }
+    }
+    return null;
+    //throw new UnsupportedOperationException("Unimplemented method 'getEdgeBetween'");
   }
 
   @Override

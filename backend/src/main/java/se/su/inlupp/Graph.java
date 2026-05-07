@@ -19,7 +19,7 @@ public interface Graph<T> extends Iterable<T> {
 
   Set<T> getNodes();
 
-  Collection<Edge<T>> getEdgesFrom(T node);
+  Collection<EdgeClass<T>> getEdgesFrom(T node);
 
   Edge<T> getEdgeBetween(T node1, T node2);
 }

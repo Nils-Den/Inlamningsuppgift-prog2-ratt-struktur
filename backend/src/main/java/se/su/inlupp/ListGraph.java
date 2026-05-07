@@ -72,29 +72,45 @@ public class ListGraph<T> implements Graph<T> {
     if (weight < 0) {
       throw new IllegalArgumentException();
     }
-    if (!graphMap.get(node1).contains(node2) || !graphMap.get(node2).contains(node1)) {
-      throw new IllegalStateException();
+    if (!graphMap.get(node1).contains(node2) || !graphMap.get(node2).contains(node1) || (!graphMap.containsKey(node1)) || (!graphMap.containsKey(node2))) {
+      throw new NoSuchElementException();
     }
-
+    EdgeClass<T> returnEdge = getEdgeBetween(node1, node2);
+    returnEdge.setWeight(weight);
     // throw new UnsupportedOperationException("Unimplemented method
     // 'setConnectionWeight'");
   }
 
   @Override
   public Set<T> getNodes() {
-    throw new UnsupportedOperationException("Unimplemented method 'getNodes'");
+    Set<T> returnSet = new HashSet<T>(graphMap.keySet());
+    return returnSet;
+    //throw new UnsupportedOperationException("Unimplemented method 'getNodes'");
   }
 
   @Override
-  public Collection<Edge<T>> getEdgesFrom(T node) {
-    throw new UnsupportedOperationException("Unimplemented method 'getEdgesFrom'");
+  public Collection<EdgeClass<T>> getEdgesFrom(T node) {
+    if (!graphMap.containsKey(node)){
+      throw new NoSuchElementException();
+    }
+    Collection <EdgeClass<T>> returnCollection = graphMap.get(node);
+    return returnCollection;
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'getEdgesFrom'");
   }
 
   @Override
-  public Edge<T> getEdgeBetween(T node1, T node2) {
-    
-    
-    //throw new UnsupportedOperationException("Unimplemented method 'getEdgeBetween'");
+  public EdgeClass<T> getEdgeBetween(T node1, T node2) {
+    if (!graphMap.containsKey(node1) || !graphMap.containsKey(node2)) {
+      throw new NoSuchElementException();
+    }
+    Set<EdgeClass<T>> edgesFrom1 = graphMap.get(node1);
+    for (EdgeClass<T> e : edgesFrom1) {
+      if (e.getDestination().equals(node2)) {
+        return e;
+      }
+    }
+    return null;
   }
 
   @Override

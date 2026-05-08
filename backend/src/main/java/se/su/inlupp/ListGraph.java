@@ -23,6 +23,7 @@ public class ListGraph<T> implements Graph<T> {
     if (!graphMap.containsKey(node)) {
       throw new NoSuchElementException();
     }
+    //Kanterna måste tas bort, även kanten som pekar mot T node måste bort.
     graphMap.remove(node);
   }
 

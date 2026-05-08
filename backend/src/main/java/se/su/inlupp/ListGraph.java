@@ -24,7 +24,28 @@ public class ListGraph<T> implements Graph<T> {
       throw new NoSuchElementException();
     }
     //Kanterna måste tas bort, även kanten som pekar mot T node måste bort.
+  /*  Collection <Set<EdgeClass<T>>> edges = graphMap.values();
+    Iterator <Set<EdgeClass<T>>> iter = edges.iterator();
+    while (iter.hasNext()){
+      Set<EdgeClass<T>> checkNode = iter.next();
+      //for(EdgeClass<T> e : edges){}
+      if(checkNode.contains(node)) {
+        iter.remove();
+      }
+    }
+
+   for(Set<EdgeClass<T>> e: edges){
+     for(EdgeClass<T> ec : e){
+
+       graphMap.get(ec).removeIf(ec -> ec.getDestination().equals(node)); 
+       }
+      }
+    */ 
+
+
+
     graphMap.remove(node);
+
   }
 
   @Override
@@ -116,6 +137,17 @@ public class ListGraph<T> implements Graph<T> {
 
   @Override
   public Iterator<T> iterator() {
-    throw new UnsupportedOperationException("Unimplemented method 'iterator'");
+    Iterator <T> iter = getNodes().iterator(); 
+      return iter;
+  }
+
+  @Override
+  public String toString(){
+    StringBuilder sb = new StringBuilder();
+    for(Map.Entry<T, Set<EdgeClass<T>>> kv : graphMap.entrySet() ){
+      sb.append(kv.getKey()).append(": ").append(kv.getValue());
+      sb.append("\n");
+    }
+    return sb.toString();
   }
 }

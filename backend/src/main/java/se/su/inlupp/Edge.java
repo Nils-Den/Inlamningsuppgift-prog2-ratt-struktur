@@ -9,5 +9,6 @@ public interface Edge<T> {
   T getDestination();
 
   String getName();
+  
    String toString();
 }

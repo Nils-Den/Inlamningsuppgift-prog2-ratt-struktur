@@ -23,8 +23,8 @@ public class ListGraph<T> implements Graph<T> {
     if (!graphMap.containsKey(node)) {
       throw new NoSuchElementException();
     }
-   for(Set<EdgeClass<T>> e: graphMap.values()){
-    e.removeIf(edges -> edges.getDestination().equals(node));
+    for (Set<EdgeClass<T>> e : graphMap.values()) {
+      e.removeIf(edges -> edges.getDestination().equals(node));
 
     }
     graphMap.remove(node);
@@ -41,7 +41,7 @@ public class ListGraph<T> implements Graph<T> {
     if (weight < 0) {
       throw new IllegalArgumentException();
     }
-    if(getEdgeBetween(node1, node2) != null)
+    if (getEdgeBetween(node1, node2) != null)
 
       throw new IllegalStateException();
     try {
@@ -57,32 +57,20 @@ public class ListGraph<T> implements Graph<T> {
     bEdges.add(new EdgeClass<T>(node1, name, weight));
   }
 
-
   @Override
   public void disconnect(T node1, T node2) {
     if (!graphMap.containsKey(node1) || !graphMap.containsKey(node2)) {
       throw new NoSuchElementException();
     }
 
-    if (!graphMap.get(node1).contains(node2) || !graphMap.get(node2).contains(node1)) {
-      throw new IllegalStateException();
-    }
-
-    
     EdgeClass<T> e1 = getEdgeBetween(node1, node2);
     EdgeClass<T> e2 = getEdgeBetween(node2, node1);
-    
-    for(EdgeClass<T> e: graphMap.get(node1)){
-      if(e.equals(e1)){
-        graphMap.remove(e);
-      }
+
+    if (e1 == null || e2 == null) {
+      throw new IllegalStateException();
     }
-    for(EdgeClass<T> e: graphMap.get(node2)){
-      if(e.equals(e2)){
-        graphMap.remove(e);
-      }
-    }
-      //SO CLOSE men lite kvar?
+    graphMap.get(node1).remove(e1);
+    graphMap.get(node2).remove(e2);
   }
 
   @Override
@@ -90,28 +78,36 @@ public class ListGraph<T> implements Graph<T> {
     if (weight < 0) {
       throw new IllegalArgumentException();
     }
-    if (!graphMap.get(node1).contains(node2) || !graphMap.get(node2).contains(node1) || (!graphMap.containsKey(node1)) || (!graphMap.containsKey(node2))) {
+    // !graphMap.get(node1).contains(node2) || !graphMap.get(node2).contains(node1)
+    // || Stod i ifsatsen tidigare
+    if ((!graphMap.containsKey(node1)) || (!graphMap.containsKey(node2))) {
       throw new NoSuchElementException();
     }
-    EdgeClass<T> returnEdge = getEdgeBetween(node1, node2);
-    returnEdge.setWeight(weight);
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'setConnectionWeight'");
+    EdgeClass<T> returnEdge1 = getEdgeBetween(node1, node2);
+    if (returnEdge1 == null) {
+      throw new NoSuchElementException();
+    }
+    EdgeClass<T> returnEdge2 = getEdgeBetween(node2, node1);
+    if (returnEdge2 == null) {
+      throw new NoSuchElementException();
+    }
+    returnEdge1.setWeight(weight);
+    returnEdge2.setWeight(weight);
   }
 
   @Override
   public Set<T> getNodes() {
     Set<T> returnSet = new HashSet<T>(graphMap.keySet());
     return returnSet;
-    //throw new UnsupportedOperationException("Unimplemented method 'getNodes'");
+    // throw new UnsupportedOperationException("Unimplemented method 'getNodes'");
   }
 
   @Override
   public Collection<EdgeClass<T>> getEdgesFrom(T node) {
-    if (!graphMap.containsKey(node)){
+    if (!graphMap.containsKey(node)) {
       throw new NoSuchElementException();
     }
-    Collection <EdgeClass<T>> returnCollection = graphMap.get(node);
+    Collection<EdgeClass<T>> returnCollection = graphMap.get(node);
     return returnCollection;
     // throw new UnsupportedOperationException("Unimplemented method
     // 'getEdgesFrom'");
@@ -133,14 +129,14 @@ public class ListGraph<T> implements Graph<T> {
 
   @Override
   public Iterator<T> iterator() {
-    Iterator <T> iter = getNodes().iterator(); 
-      return iter;
+    Iterator<T> iter = getNodes().iterator();
+    return iter;
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     StringBuilder sb = new StringBuilder();
-    for(Map.Entry<T, Set<EdgeClass<T>>> kv : graphMap.entrySet() ){
+    for (Map.Entry<T, Set<EdgeClass<T>>> kv : graphMap.entrySet()) {
       sb.append(kv.getKey()).append(": ").append(kv.getValue());
       sb.append("\n");
     }

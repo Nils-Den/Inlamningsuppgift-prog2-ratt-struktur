@@ -15,7 +15,6 @@ public class ListGraph<T> implements Graph<T> {
   @Override
   public void add(T node) {
     graphMap.putIfAbsent(node, new HashSet<Edge<T>>());
-    // throw new UnsupportedOperationException("Unimplemented method 'add'");
   }
 
   @Override
@@ -78,8 +77,6 @@ public class ListGraph<T> implements Graph<T> {
     if (weight < 0) {
       throw new IllegalArgumentException();
     }
-    // !graphMap.get(node1).contains(node2) || !graphMap.get(node2).contains(node1)
-    // || Stod i ifsatsen tidigare
     if ((!graphMap.containsKey(node1)) || (!graphMap.containsKey(node2))) {
       throw new NoSuchElementException();
     }
@@ -99,7 +96,6 @@ public class ListGraph<T> implements Graph<T> {
   public Set<T> getNodes() {
     Set<T> returnSet = new HashSet<T>(graphMap.keySet());
     return returnSet;
-    // throw new UnsupportedOperationException("Unimplemented method 'getNodes'");
   }
 
   @Override
@@ -109,8 +105,6 @@ public class ListGraph<T> implements Graph<T> {
     }
     Collection<Edge<T>> returnCollection = graphMap.get(node);
     return returnCollection;
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'getEdgesFrom'");
   }
 
   @Override
@@ -141,9 +135,5 @@ public class ListGraph<T> implements Graph<T> {
       sb.append("\n");
     }
     return sb.toString();
-  }
-
-  public Map<T, Set<Edge<T>>> getGraphMap(){
-    return graphMap;
   }
 }

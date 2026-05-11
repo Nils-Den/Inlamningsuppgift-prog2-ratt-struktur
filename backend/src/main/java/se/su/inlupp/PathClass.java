@@ -3,14 +3,13 @@ package se.su.inlupp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class PathClass<T> implements Path<T> {
     private T startNode;
     private T endNode;
-    private final Set<Edge<T>> edges;
+    private final List<Edge<T>> edges;
 
-    public PathClass(T startNode, T endNode, Set<Edge<T>> edges) {
+    public PathClass(T startNode, T endNode, List<Edge<T>> edges) {
         this.startNode = startNode;
         this.endNode = endNode;
         this.edges = edges;
@@ -34,16 +33,12 @@ public class PathClass<T> implements Path<T> {
     }
 
     public List<Edge<T>> getEdges() {
-        // DENNA METOD ÄR EJ KLAR. BEHÖVER RETURNERA EDGES I ORDNING FRÅN START TILL
-        // SLUT.
-        List<Edge<T>> returnEdges = new ArrayList<Edge<T>>();
-        returnEdges.addAll(edges);
-        return returnEdges;
+        return edges;
     }
 
     public List<T> getNodes() {
-        // Kolla över denna igen!!!!
         List<T> returnNodes = new ArrayList<T>();
+        returnNodes.add(startNode);
         for (Edge<T> e : edges) {
             returnNodes.add(e.getDestination());
         }
@@ -56,10 +51,16 @@ public class PathClass<T> implements Path<T> {
         return iter;
     }
 
-    // UTVECKLA!!!
     @Override
     public String toString() {
-        String returnString = "";
-        return returnString;
+        String returnString = "Start node: " + startNode + " End node: " + endNode + "\n";
+        StringBuilder sb = new StringBuilder(returnString);
+        for(T e : getNodes()){
+            if(e != startNode || e != endNode){
+               sb.append(e).append(", ");  
+            }
+        }
+        sb.append("\n" + "Total weight: " + getTotalWeight());
+        return sb.toString();
     }
 }

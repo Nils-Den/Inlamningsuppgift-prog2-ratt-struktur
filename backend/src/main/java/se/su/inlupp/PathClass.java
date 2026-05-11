@@ -1,9 +1,16 @@
-public class PathClass implements Path {
+package se.su.inlupp;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+public class PathClass<T> implements Path {
     private T startNode;
     private T endNode;
-    private final Set<Edge<T>> edges;
+    private final Set<EdgeClass<T>> edges;
 
-    public Path(T startNode, T endNode, Set<Edge<T>> edges){
+    public PathClass(T startNode, T endNode, Set<EdgeClass<T>> edges) {
         this.startNode = startNode;
         this.endNode = endNode;
         this.edges = edges;
@@ -19,27 +26,40 @@ public class PathClass implements Path {
 
     public int getTotalWeight() {
         int value = 0;
-        for (Edge e : edges) {
+        for (EdgeClass<T> e : edges) {
             value += e.getWeight();
         }
         return value;
 
     }
 
-    public List<Edge<T>> getEdges() {
+    public List<EdgeClass<T>> getEdges() {
         // DENNA METOD ÄR EJ KLAR. BEHÖVER RETURNERA EDGES I ORDNING FRÅN START TILL
         // SLUT.
-        List<Edge<T>> returnEdges = new ArrayList<Edge<T>>();
+        List<EdgeClass<T>> returnEdges = new ArrayList<EdgeClass<T>>();
         returnEdges.addAll(edges);
         return returnEdges;
     }
 
     public List<T> getNodes() {
-        //Kolla över denna igen!!!!
+        // Kolla över denna igen!!!!
         List<T> returnNodes = new ArrayList<T>();
-        for (Edge e : edges) {
-            returnNodes.add(e.getDestination);
+        for (EdgeClass<T> e : edges) {
+            returnNodes.add(e.getDestination());
         }
         return returnNodes;
+    }
+
+    @Override
+    public Iterator iterator() {
+        Iterator<EdgeClass<T>> iter = getEdges().iterator();
+        return iter;
+    }
+
+    // UTVECKLA!!!
+    @Override
+    public String toString() {
+        String returnString = "";
+        return returnString;
     }
 }

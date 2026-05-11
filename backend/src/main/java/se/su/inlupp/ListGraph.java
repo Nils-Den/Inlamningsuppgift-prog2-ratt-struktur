@@ -142,4 +142,8 @@ public class ListGraph<T> implements Graph<T> {
     }
     return sb.toString();
   }
+
+  public Map<T, Set<EdgeClass<T>>> getGraphMap(){
+    return graphMap;
+  }
 }

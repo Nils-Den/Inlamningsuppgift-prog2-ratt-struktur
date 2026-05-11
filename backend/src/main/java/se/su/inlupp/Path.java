@@ -13,6 +13,6 @@ public interface Path<T> extends Iterable<Edge<T>> {
   List<Edge<T>> getEdges();
 
   List<T> getNodes();
+
   String toString();
 }
-

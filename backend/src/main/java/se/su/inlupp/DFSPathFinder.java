@@ -9,23 +9,23 @@ import java.util.Set;
 public class DFSPathFinder<T> implements PathFinder<T> {
 
   @Override
-  public PathClass<T> findPath(Graph<T> graph, T from, T to) {
+  public Path<T> findPath(Graph<T> graph, T from, T to) {
     Map<T, T> connections = new HashMap<>();
     connect(from, null, connections);
-    LinkedList<EdgeClass<T>> path = new LinkedList<>();
+    LinkedList<Edge<T>> path = new LinkedList<>();
     
     
     T current = to;
-    ListGraph<T> listGraph = new ListGraph<>();
+    //ListGraph<T> listGraph = new ListGraph<>();
     while (current != null && !current.equals(from)){
       T next = connections.get(current);
-      EdgeClass<T> edge = listGraph.getEdgeBetween(next, current);
+      Edge<T> edge = graph.getEdgeBetween(next, current);
       path.addFirst(edge);
       current = next;
 
     }
-    Set<EdgeClass<T>> pathSet = new HashSet<EdgeClass<T>>(path);
-    PathClass<T> returnPath = new PathClass<T>(from, to, pathSet);
+    Set<Edge<T>> pathSet = new HashSet<Edge<T>>(path);
+    Path<T> returnPath = new PathClass<T>(from, to, pathSet);
     return returnPath;
   }
 }

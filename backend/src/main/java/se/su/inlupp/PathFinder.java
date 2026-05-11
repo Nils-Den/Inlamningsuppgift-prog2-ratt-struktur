@@ -13,8 +13,8 @@ public interface PathFinder<T> {
   default public void connect(T from, T to, Map<T, T> connections){
     connections.put(from, to);
     ListGraph<T> listGraph = new ListGraph<T>();
-    Map<T, Set<EdgeClass<T>>> graphMap = new HashMap<>(listGraph.getGraphMap());
-    for (EdgeClass<T> edge: graphMap.get(from)){
+    Map<T, Set<Edge<T>>> graphMap = new HashMap<>(listGraph.getGraphMap());
+    for (Edge<T> edge: graphMap.get(from)){
       T destination = edge.getDestination();
       if (!connections.containsKey(destination)){
         connect(destination, from, connections);

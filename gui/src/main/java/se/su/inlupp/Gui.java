@@ -1,9 +1,15 @@
 package se.su.inlupp;
 
+import java.util.List;
+import java.util.Random;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -11,22 +17,36 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
+  ListGraph<Person> allPersons = new ListGraph<>();
+
+  int[][] positions = {{100, 100}, {200, 100}, {300, 100}};
+
 
   public void start(Stage stage) {
-    
     //ISAKS KOD:
     //Graph<String> graph = new ListGraph<String>();
     //String javaVersion = System.getProperty("java.version");
     //String javafxVersion = System.getProperty("javafx.version");
     //Label label =
     //    new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-
+    
 
     BorderPane root = new BorderPane();
+
+    Canvas canvas = new Canvas(640, 480);
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    root.setCenter(canvas);
+
+    //Testa att rita linje
+    gc.strokeLine(50, 0, 50, 250);
+
+
 
     //Här börjar topmenyn med tillhörande knappar
     HBox bottomMenu = new HBox(15);
@@ -73,11 +93,33 @@ public class Gui extends Application {
     menu.getItems().add(addPItem);
     //addPItem.setOnAction(new AddPItemHandler()?????);
 
-    
+
+    //HÄR TESTAR VI KOD:
+    load();
+    int i = 0;
+    for (Person p: allPersons){
+      int x = positions [i][0];
+      int y = positions [i][1];
+      gc.drawImage(p.getImage(), x, y, 100, 100);
+      i++;
+      
+    }
     
     Scene scene = new Scene (root, 640, 480);
     stage.setScene(scene);
     stage.show();
+  }
+
+  public void load(){
+    Person nellie = new Person("Nellie Åkerström", 1998, "Kvinna");
+    Person erika = new Person ("Erika Lundblad", 1995, "Kvinna");
+    Person nils = new Person("Nils Denward", 1995, "Man");
+    allPersons.add(nellie);
+    allPersons.add(erika);
+    allPersons.add(nils);
+    allPersons.connect(nellie, erika, "fiender", 10);
+    allPersons.connect(nellie, nils, "bästisar", 0);
+
   }
 
   public static void main(String[] args) {

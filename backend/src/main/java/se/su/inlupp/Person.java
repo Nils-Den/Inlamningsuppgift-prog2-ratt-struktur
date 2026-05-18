@@ -7,16 +7,26 @@ package se.su.inlupp;
 
 import java.time.Year;
 
-public class Person {
-    String name;
-    int yearOfBirth;
-    String gender;
+import javafx.scene.image.Image;
 
+public class Person {
+    private String name;
+    private int yearOfBirth;
+    private String gender;
+    private Image image;
+
+    public Person(String name, int yearOfBirth, String gender, Image image) {
+        this(name, yearOfBirth, gender);
+        this.image = image;
+    }
+    
     public Person(String name, int yearOfBirth, String gender) {
         this.name = name;
         this.yearOfBirth = yearOfBirth;
         this.gender = gender;
-
+        if (image == null){
+            this.image = new Image (Person.class.getResourceAsStream("idea.png"));
+        }
     }
 
     public String getName() {
@@ -30,5 +40,9 @@ public class Person {
 
     public String getGender() {
         return gender;
+    }
+
+    public Image getImage(){
+        return image;
     }
 }

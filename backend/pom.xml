@@ -32,7 +32,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <configuration>
-          <mainClass>se.su.inlupp.backend/se.su.inlupp.backend.App</mainClass>
+          <Gui>se.su.inlupp.backend/se.su.inlupp.backend.App</Gui>
         </configuration>
       </plugin>
     </plugins>

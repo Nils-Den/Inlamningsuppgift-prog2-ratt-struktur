@@ -8,16 +8,19 @@ package se.su.inlupp;
 import java.time.Year;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Person {
     private String name;
     private int yearOfBirth;
     private String gender;
-    private Image image;
+    private ImageView image;
 
+
+    //KOLLA DETTA IGEN IMAGE/IMAGEVIEW OCH GETRESOURCES AS STREAM
     public Person(String name, int yearOfBirth, String gender, Image image) {
         this(name, yearOfBirth, gender);
-        this.image = image;
+        this.image = new ImageView(image);
     }
     
     public Person(String name, int yearOfBirth, String gender) {
@@ -25,7 +28,8 @@ public class Person {
         this.yearOfBirth = yearOfBirth;
         this.gender = gender;
         if (image == null){
-            this.image = new Image (Person.class.getResourceAsStream("idea.png"));
+            Image profilePic = new Image (Person.class.getResourceAsStream("idea.png"));
+            this.image = new ImageView(profilePic);
         }
     }
 
@@ -42,7 +46,7 @@ public class Person {
         return gender;
     }
 
-    public Image getImage(){
+    public ImageView getImage(){
         return image;
     }
 }

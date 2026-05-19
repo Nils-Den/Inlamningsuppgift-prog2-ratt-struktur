@@ -1,6 +1,7 @@
 package se.su.inlupp;
 
 import java.util.List;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -27,13 +28,17 @@ import javafx.stage.Stage;
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
 
-  private int[][] positions = { { 100, 100 }, { 200, 100 }, { 300, 100 } };
+  private int[][] positions = { { 100, 130 }, { 250, 200 }, { 350, 50 } };
 
-  //private Canvas canvas = new Canvas(640, 480);
+  private PersonImage personToAdd;
+
+  // private Canvas canvas = new Canvas(640, 480);
 
   private Pane pane = new Pane();
 
-  //private GraphicsContext gc = canvas.getGraphicsContext2D();
+  Label placePerson;
+
+  // private GraphicsContext gc = canvas.getGraphicsContext2D();
 
   public void start(Stage stage) {
     // ISAKS KOD:
@@ -66,6 +71,7 @@ public class Gui extends Application {
 
     Button addP = new Button("Add Person");
     bottomMenu.getChildren().add(addP);
+    addP.setOnAction(new AddPersonHandler());
 
     // Här är drop down menyn som ska ligga i vänstra hörnet:
     // Vi behöver handlers överallt
@@ -98,15 +104,10 @@ public class Gui extends Application {
     load();
     int i = 0;
     for (Person p : allPersons) {
-      ImageView iv = new ImageView(p.getImage());
       int x = positions[i][0];
       int y = positions[i][1];
-      iv.setFitWidth(100);
-      iv.setFitHeight(100);
-
-      iv.setLayoutX(x);
-      iv.setLayoutY(y);
-      pane.getChildren().add(iv);
+      PersonImage pi = new PersonImage(null, p);
+      drawPerson(pi, x, y);
       i++;
 
     }
@@ -114,6 +115,17 @@ public class Gui extends Application {
     Scene scene = new Scene(root, 640, 480);
     stage.setScene(scene);
     stage.show();
+  }
+
+  public void drawPerson(PersonImage pi, double x, double y) {
+    //PersonImage pi = new PersonImage(p.getImage(), p);
+    //ImageView iv = new ImageView(p.getImage());
+    
+    pi.setLayoutX(x);
+    pi.setLayoutY(y);
+    //pi.setPadding(new Insets(10, 10, 10, 10));
+    pane.getChildren().add(pi);
+    //new PersonImage(iv, p);
   }
 
   public void load() {
@@ -132,19 +144,43 @@ public class Gui extends Application {
     launch(args);
   }
 
-  private class AddPersonHandler implements EventHandler<ActionEvent> {
+  class AddPersonHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
       // Skapar en dialogruta från klassen AddPersonGui
       AddPersonGui addPersonGui = new AddPersonGui();
-      addPersonGui.showAndWait();
-      Label placePerson = new Label("Click where you want to place the person!");
-      //gc.fillText("Click where you want to place the person!", 200, 25);
-      
-      //Här hårdkodar vi positionen av labeln. Kan behöva snyggas till?
+      Optional<PersonImage> newPerson = addPersonGui.showAndWait();
+      newPerson.ifPresent(person -> {
+        allPersons.add(newPerson.get().getPerson());
+        personToAdd = newPerson.get();
+      });
+
+      placePerson = new Label("Click where you want to place the person!");
+      // gc.fillText("Click where you want to place the person!", 200, 25);
+
+      // Här hårdkodar vi positionen av labeln. Kan behöva snyggas till?
       placePerson.setLayoutX(200);
       pane.getChildren().add(placePerson);
-      
+      pane.setOnMouseClicked(new PlacePersonHandler());
+
+    }
+  }
+
+  class PlacePersonHandler implements EventHandler<MouseEvent> {
+    @Override
+    public void handle(MouseEvent event) {
+      double y = event.getY() - 50;
+      double x = event.getX() - 50;
+      drawPerson(personToAdd, x, y);
+      pane.getChildren().remove(placePerson);
+      pane.setOnMouseClicked(null);
+
+    }
+  }
+
+  class ClickHandler implements EventHandler<MouseEvent>{
+    @Override
+    public void handle(MouseEvent event){
 
     }
   }

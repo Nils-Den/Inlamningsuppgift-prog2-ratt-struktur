@@ -3,6 +3,8 @@ package se.su.inlupp;
 import java.util.List;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -14,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -21,9 +25,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Gui extends Application {
-  ListGraph<Person> allPersons = new ListGraph<>();
+  private ListGraph<Person> allPersons = new ListGraph<>();
 
-  int[][] positions = { { 100, 100 }, { 200, 100 }, { 300, 100 } };
+  private int[][] positions = { { 100, 100 }, { 200, 100 }, { 300, 100 } };
+
+  //private Canvas canvas = new Canvas(640, 480);
+
+  private Pane pane = new Pane();
+
+  //private GraphicsContext gc = canvas.getGraphicsContext2D();
 
   public void start(Stage stage) {
     // ISAKS KOD:
@@ -36,12 +46,10 @@ public class Gui extends Application {
 
     BorderPane root = new BorderPane();
 
-    Canvas canvas = new Canvas(640, 480);
-    GraphicsContext gc = canvas.getGraphicsContext2D();
-    root.setCenter(canvas);
+    root.setCenter(pane);
 
     // Testa att rita linje
-    //gc.strokeLine(50, 0, 50, 250);
+    // gc.strokeLine(50, 0, 50, 250);
 
     // Här börjar topmenyn med tillhörande knappar
     HBox bottomMenu = new HBox(15);
@@ -84,15 +92,21 @@ public class Gui extends Application {
 
     MenuItem addPItem = new MenuItem("Add Person");
     menu.getItems().add(addPItem);
-    // addPItem.setOnAction(new AddPItemHandler()?????);
+    addPItem.setOnAction(new AddPersonHandler());
 
     // HÄR TESTAR VI KOD:
     load();
     int i = 0;
     for (Person p : allPersons) {
+      ImageView iv = new ImageView(p.getImage());
       int x = positions[i][0];
       int y = positions[i][1];
-      gc.drawImage(p.getImage(), x, y, 100, 100);
+      iv.setFitWidth(100);
+      iv.setFitHeight(100);
+
+      iv.setLayoutX(x);
+      iv.setLayoutY(y);
+      pane.getChildren().add(iv);
       i++;
 
     }
@@ -116,5 +130,22 @@ public class Gui extends Application {
 
   public static void main(String[] args) {
     launch(args);
+  }
+
+  private class AddPersonHandler implements EventHandler<ActionEvent> {
+    @Override
+    public void handle(ActionEvent event) {
+      // Skapar en dialogruta från klassen AddPersonGui
+      AddPersonGui addPersonGui = new AddPersonGui();
+      addPersonGui.showAndWait();
+      Label placePerson = new Label("Click where you want to place the person!");
+      //gc.fillText("Click where you want to place the person!", 200, 25);
+      
+      //Här hårdkodar vi positionen av labeln. Kan behöva snyggas till?
+      placePerson.setLayoutX(200);
+      pane.getChildren().add(placePerson);
+      
+
+    }
   }
 }

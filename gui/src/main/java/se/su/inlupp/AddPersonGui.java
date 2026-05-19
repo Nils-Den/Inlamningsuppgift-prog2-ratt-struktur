@@ -31,8 +31,8 @@ public class AddPersonGui extends Dialog<Person>{
 
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        setResultConverter(ButtonType ->{ 
-            if(ButtonType == ButtonType.OK){
+        setResultConverter(buttonType ->{ 
+            if(buttonType == ButtonType.OK){
                 try{ String name = nameField.getText();
                     int yearOfBirth = Integer.parseInt(yearOfBirthField.getText());
                     String gender = genderField.getText();

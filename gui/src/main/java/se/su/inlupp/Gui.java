@@ -41,7 +41,7 @@ public class Gui extends Application {
     root.setCenter(canvas);
 
     // Testa att rita linje
-    gc.strokeLine(50, 0, 50, 250);
+    //gc.strokeLine(50, 0, 50, 250);
 
     // Här börjar topmenyn med tillhörande knappar
     HBox bottomMenu = new HBox(15);

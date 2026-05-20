@@ -19,7 +19,6 @@ public class PersonImage extends BorderPane {
     Person person;
     double startX;
     double startY;
-    static PersonImage hasFocus; 
 
     public PersonImage(ImageView image, Person person) {
         if (image == null){
@@ -45,12 +44,12 @@ public class PersonImage extends BorderPane {
         setOnMouseClicked((event) -> {
             nameBox.setBackground(Background.fill(Color.CORAL));
             requestFocus();
-            hasFocus = this;
+            //hasFocus = this;
         });
         focusedProperty().addListener((obs, oldValue, newValue) -> {
             if(newValue){
                 requestFocus();
-                hasFocus = this;
+                //hasFocus = this;
                 nameBox.setBackground(Background.fill(Color.CORAL));
             }
             else{
@@ -67,9 +66,6 @@ public class PersonImage extends BorderPane {
         return this.image;
     }
 
-    public static PersonImage getHasFocus(){
-        return hasFocus;
-    }
 
 /*    class MarkedNode implements EventHandler<MouseEvent> {
         @Override

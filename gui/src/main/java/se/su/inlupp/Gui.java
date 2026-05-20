@@ -27,7 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration; 
+import javafx.util.Duration;
 
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
@@ -35,23 +35,14 @@ public class Gui extends Application {
   private int[][] positions = { { 100, 130 }, { 250, 200 }, { 350, 50 } };
 
   private PersonImage personToAdd;
-
+  private PersonImage hasFocus;
   // private Canvas canvas = new Canvas(640, 480);
 
   private Pane pane = new Pane();
 
   Label placePerson;
 
-  // private GraphicsContext gc = canvas.getGraphicsContext2D();
-
   public void start(Stage stage) {
-    // ISAKS KOD:
-    // Graph<String> graph = new ListGraph<String>();
-    // String javaVersion = System.getProperty("java.version");
-    // String javafxVersion = System.getProperty("javafx.version");
-    // Label label =
-    // new Label("Hello, JavaFX " + javafxVersion + ", running on Java " +
-    // javaVersion + ".");
 
     BorderPane root = new BorderPane();
 
@@ -123,14 +114,14 @@ public class Gui extends Application {
   }
 
   public void drawPerson(PersonImage pi, double x, double y) {
-    //PersonImage pi = new PersonImage(p.getImage(), p);
-    //ImageView iv = new ImageView(p.getImage());
-    
+    // PersonImage pi = new PersonImage(p.getImage(), p);
+    // ImageView iv = new ImageView(p.getImage());
+
     pi.setLayoutX(x);
     pi.setLayoutY(y);
-    //pi.setPadding(new Insets(10, 10, 10, 10));
+    // pi.setPadding(new Insets(10, 10, 10, 10));
     pane.getChildren().add(pi);
-    //new PersonImage(iv, p);
+    // new PersonImage(iv, p);
   }
 
   public void load() {
@@ -159,14 +150,15 @@ public class Gui extends Application {
         allPersons.add(newPerson.get().getPerson());
         personToAdd = newPerson.get();
       });
+      if (!newPerson.isEmpty()) {
+        placePerson = new Label("Click where you want to place the person!");
+        // gc.fillText("Click where you want to place the person!", 200, 25);
 
-      placePerson = new Label("Click where you want to place the person!");
-      // gc.fillText("Click where you want to place the person!", 200, 25);
-
-      // Här hårdkodar vi positionen av labeln. Kan behöva snyggas till?
-      placePerson.setLayoutX(200);
-      pane.getChildren().add(placePerson);
-      pane.setOnMouseClicked(new PlacePersonHandler());
+        // Här hårdkodar vi positionen av labeln. Kan behöva snyggas till?
+        placePerson.setLayoutX(200);
+        pane.getChildren().add(placePerson);
+        pane.setOnMouseClicked(new PlacePersonHandler());
+      }
 
     }
   }
@@ -183,32 +175,44 @@ public class Gui extends Application {
     }
   }
 
-  class RemoveHandler implements EventHandler<ActionEvent>{
+  class RemoveHandler implements EventHandler<ActionEvent> {
     @Override
-    public void handle(ActionEvent event){
+    public void handle(ActionEvent event) {
       Label removePersonLabel = new Label("The person you have selected has been removed!");
-    
+
       removePersonLabel.setLayoutX(200);
       pane.getChildren().add(removePersonLabel);
-      //pane.setOnMouseClicked(new MarkedNode());
       //
-      //pane.setOnMouseClicked(null);
-      pane.getChildren().remove(PersonImage.getHasFocus());
+      //
+      // pane.setOnMouseClicked(null);
+      pane.setOnMouseClicked(new FocusedPersonHandler());
+      pane.getChildren().remove(hasFocus);
+
       PauseTransition pause = new PauseTransition(Duration.seconds(3));
       pause.setOnFinished(e -> pane.getChildren().remove(removePersonLabel));
       pause.play();
-    
-    
-    }
-  }
- /*    class MarkedNode implements EventHandler<MouseEvent> {
-        @Override
-        public void handle(MouseEvent event) {
-          pane.getChildren().remove(event.); 
-          //PersonImage pi = (PersonImage) event.getSource(); 
 
-          
-          //pi.setBackground(Background.fill(Color.AZURE));
-        }
-    }*/
+    }
+
+    class FocusedPersonHandler implements EventHandler<MouseEvent> {
+      @Override
+      public void handle(MouseEvent event) {
+        hasFocus = (PersonImage) event.getSource();
+      }
+    }
+
+  }
+  /*
+   * class MarkedNode implements EventHandler<MouseEvent> {
+   * 
+   * @Override
+   * public void handle(MouseEvent event) {
+   * pane.getChildren().remove(event.);
+   * //PersonImage pi = (PersonImage) event.getSource();
+   * 
+   * 
+   * //pi.setBackground(Background.fill(Color.AZURE));
+   * }
+   * }
+   */
 }

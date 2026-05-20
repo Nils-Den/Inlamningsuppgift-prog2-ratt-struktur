@@ -66,7 +66,11 @@ public class PersonImage extends BorderPane {
         return this.image;
     }
 
-
+   /*  public double [] getCoordinates(){
+        double [] coordinates = {startX, startY};
+        return coordinates;
+    }
+*/
 /*    class MarkedNode implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent event) {
@@ -77,8 +81,8 @@ public class PersonImage extends BorderPane {
     class StartDragHandler implements EventHandler<MouseEvent>{
         @Override
         public void handle(MouseEvent event){
-            double startX = event.getX();
-            double startY = event.getY();
+             startX = event.getX();
+             startY = event.getY();
         }
     }
 
@@ -87,7 +91,7 @@ public class PersonImage extends BorderPane {
         public void handle(MouseEvent event){
             double newX = getLayoutX() + event.getX() - startX;
             double newY = getLayoutY() + event.getY() - startY;
-            relocate(newX - 50, newY - 50);
+            relocate(newX, newY);
         }
     }
 

@@ -1,5 +1,6 @@
 package se.su.inlupp;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -33,6 +36,8 @@ public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
 
   private int[][] positions = { { 100, 130 }, { 250, 200 }, { 350, 50 } };
+
+  private PersonImage [] loadedData = new PersonImage [3];
 
   private PersonImage personToAdd;
   private PersonImage hasFocus;
@@ -99,13 +104,27 @@ public class Gui extends Application {
     // HÄR TESTAR VI KOD:
     load();
     int i = 0;
+
     for (Person p : allPersons) {
       int x = positions[i][0];
       int y = positions[i][1];
       PersonImage pi = new PersonImage(null, p);
       drawPerson(pi, x, y);
+      loadedData[i] = pi;
       i++;
 
+    } 
+    for(int n = 0; n < loadedData.length; n++){
+      //Collection <Edge<Person>> edges= allPersons.getEdgesFrom(loadedData[n].getPerson());
+      for (int x = 0; x < loadedData.length; x++){
+        allPersons.getEdgeBetween(loadedData[n].getPerson(), loadedData[x].getPerson());
+        if (allPersons.getEdgeBetween(loadedData[n].getPerson(), loadedData[x].getPerson()) != null){
+          drawEdge(loadedData[n], loadedData[x]);
+        }
+      }
+        
+      
+      
     }
 
     Scene scene = new Scene(root, 640, 480);
@@ -120,8 +139,26 @@ public class Gui extends Application {
     pi.setLayoutX(x);
     pi.setLayoutY(y);
     // pi.setPadding(new Insets(10, 10, 10, 10));
+    pi.addEventHandler(MouseEvent.MOUSE_CLICKED, new FocusHandler(pi));
     pane.getChildren().add(pi);
     // new PersonImage(iv, p);
+
+
+  }
+
+  public void drawEdge(PersonImage pi1, PersonImage pi2 ){
+    if(allPersons.getEdgeBetween(pi1.getPerson(), pi2.getPerson()) != null){
+     // double [] pos1 = pi1.getCoordinates();
+      //double [] pos2 = pi2.getCoordinates();
+      Line line = new Line();
+      line.startXProperty().bind(pi1.layoutXProperty());
+      line.startYProperty().bind(pi1.layoutYProperty());
+      line.endXProperty().bind(pi2.layoutXProperty());
+      line.endYProperty().bind(pi2.layoutYProperty());
+
+      pane.getChildren().add(line);
+    }
+
   }
 
   public void load() {
@@ -182,9 +219,9 @@ public class Gui extends Application {
 
       removePersonLabel.setLayoutX(200);
       pane.getChildren().add(removePersonLabel);
-      
-      pane.setOnMouseClicked(new FocusedPersonHandler());
+      allPersons.remove(hasFocus.getPerson());
       pane.getChildren().remove(hasFocus);
+     
 
       PauseTransition pause = new PauseTransition(Duration.seconds(3));
       pause.setOnFinished(e -> pane.getChildren().remove(removePersonLabel));
@@ -192,25 +229,19 @@ public class Gui extends Application {
 
     }
 
-    class FocusedPersonHandler implements EventHandler<MouseEvent> {
-      @Override
-      public void handle(MouseEvent event) {
-        hasFocus = (PersonImage) event.getTarget();
-      }
+  }
+
+  class FocusHandler implements EventHandler<MouseEvent> {
+    private PersonImage pi;
+
+    public FocusHandler(PersonImage pi) {
+      this.pi = pi;
     }
 
+    @Override
+    public void handle(MouseEvent event) {
+      hasFocus = pi;
+    }
   }
-  /*
-   * class MarkedNode implements EventHandler<MouseEvent> {
-   * 
-   * @Override
-   * public void handle(MouseEvent event) {
-   * pane.getChildren().remove(event.);
-   * //PersonImage pi = (PersonImage) event.getSource();
-   * 
-   * 
-   * //pi.setBackground(Background.fill(Color.AZURE));
-   * }
-   * }
-   */
+
 }

@@ -182,9 +182,7 @@ public class Gui extends Application {
 
       removePersonLabel.setLayoutX(200);
       pane.getChildren().add(removePersonLabel);
-      //
-      //
-      // pane.setOnMouseClicked(null);
+      
       pane.setOnMouseClicked(new FocusedPersonHandler());
       pane.getChildren().remove(hasFocus);
 
@@ -197,7 +195,7 @@ public class Gui extends Application {
     class FocusedPersonHandler implements EventHandler<MouseEvent> {
       @Override
       public void handle(MouseEvent event) {
-        hasFocus = (PersonImage) event.getSource();
+        hasFocus = (PersonImage) event.getTarget();
       }
     }
 

@@ -17,6 +17,9 @@ public class PersonImage extends BorderPane {
 
     ImageView image;
     Person person;
+    double startX;
+    double startY;
+    static PersonImage hasFocus; 
 
     public PersonImage(ImageView image, Person person) {
         if (image == null){
@@ -35,7 +38,25 @@ public class PersonImage extends BorderPane {
         nameBox.setAlignment(Pos.TOP_CENTER);
         setTop(nameBox);
 
-        setOnMouseClicked(new MarkedNode());
+        //setOnMouseClicked(new MarkedNode());
+        setOnMousePressed(new StartDragHandler());
+        setOnMouseDragged(new DragHandler());
+
+        setOnMouseClicked((event) -> {
+            nameBox.setBackground(Background.fill(Color.CORAL));
+            requestFocus();
+            hasFocus = this;
+        });
+        focusedProperty().addListener((obs, oldValue, newValue) -> {
+            if(newValue){
+                requestFocus();
+                hasFocus = this;
+                nameBox.setBackground(Background.fill(Color.CORAL));
+            }
+            else{
+                nameBox.setBackground(Background.fill(Color.BLUE));
+            }
+        });
     }
 
     public Person getPerson() {
@@ -46,10 +67,31 @@ public class PersonImage extends BorderPane {
         return this.image;
     }
 
-    class MarkedNode implements EventHandler<MouseEvent> {
+    public static PersonImage getHasFocus(){
+        return hasFocus;
+    }
+
+/*    class MarkedNode implements EventHandler<MouseEvent> {
         @Override
         public void handle(MouseEvent event) {
             setBackground(Background.fill(Color.AZURE));
+        }
+    } */
+
+    class StartDragHandler implements EventHandler<MouseEvent>{
+        @Override
+        public void handle(MouseEvent event){
+            double startX = event.getX();
+            double startY = event.getY();
+        }
+    }
+
+    class DragHandler implements EventHandler<MouseEvent>{
+        @Override
+        public void handle(MouseEvent event){
+            double newX = getLayoutX() + event.getX() - startX;
+            double newY = getLayoutY() + event.getY() - startY;
+            relocate(newX - 50, newY - 50);
         }
     }
 

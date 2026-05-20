@@ -3,6 +3,7 @@ package se.su.inlupp;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,11 +20,14 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration; 
 
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
@@ -65,6 +69,7 @@ public class Gui extends Application {
 
     Button removeP = new Button("Remove Person");
     bottomMenu.getChildren().add(removeP);
+    removeP.setOnAction(new RemoveHandler());
 
     Button connectP = new Button("Connect Friends");
     bottomMenu.getChildren().add(connectP);
@@ -178,10 +183,32 @@ public class Gui extends Application {
     }
   }
 
-  class ClickHandler implements EventHandler<MouseEvent>{
+  class RemoveHandler implements EventHandler<ActionEvent>{
     @Override
-    public void handle(MouseEvent event){
-
+    public void handle(ActionEvent event){
+      Label removePersonLabel = new Label("The person you have selected has been removed!");
+    
+      removePersonLabel.setLayoutX(200);
+      pane.getChildren().add(removePersonLabel);
+      //pane.setOnMouseClicked(new MarkedNode());
+      //
+      //pane.setOnMouseClicked(null);
+      pane.getChildren().remove(PersonImage.getHasFocus());
+      PauseTransition pause = new PauseTransition(Duration.seconds(3));
+      pause.setOnFinished(e -> pane.getChildren().remove(removePersonLabel));
+      pause.play();
+    
+    
     }
   }
+ /*    class MarkedNode implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+          pane.getChildren().remove(event.); 
+          //PersonImage pi = (PersonImage) event.getSource(); 
+
+          
+          //pi.setBackground(Background.fill(Color.AZURE));
+        }
+    }*/
 }

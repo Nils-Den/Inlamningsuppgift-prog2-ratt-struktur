@@ -1,5 +1,8 @@
 package se.su.inlupp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -14,7 +17,7 @@ public class AddPersonGui extends Dialog<PersonImage> {
             genderField = new TextField(),
             imageField = new TextField();
 
-    public AddPersonGui() {
+    public AddPersonGui(ListGraph graph) {
         setTitle("Add a new person!");
         setHeaderText(null);
 
@@ -22,7 +25,7 @@ public class AddPersonGui extends Dialog<PersonImage> {
         grid.setHgap(10);
         grid.setVgap(5);
 
-        grid.addRow(0, new Label("* Name:"), nameField);
+        grid.addRow(0, new Label("* Username:"), nameField);
         grid.addRow(1, new Label("* Year of birth:"), yearOfBirthField);
         grid.addRow(2, new Label("* Gender:"), genderField);
         grid.addRow(3, new Label("Image:"), imageField); // Hur löser vi bildinmatningen snyggt?
@@ -35,6 +38,14 @@ public class AddPersonGui extends Dialog<PersonImage> {
 
         setResultConverter(buttonType -> {
             if (buttonType == ButtonType.OK) {
+                ArrayList <Person> list = new ArrayList<Person>(graph.getNodes());                
+                for(Person p : list ){
+                    if(p.getName().equals(nameField.getText())){
+                        new ErrorMessage<>("Name already exists");
+                    }
+                }
+                
+                }//anropa alert för ej flera med samma namn
                 try {
                     String name = nameField.getText();
                     int yearOfBirth = Integer.parseInt(yearOfBirthField.getText());

@@ -69,10 +69,15 @@ public class Gui extends Application {
 
     Button connectP = new Button("Connect Friends");
     bottomMenu.getChildren().add(connectP);
+    connectP.setOnAction(new ConnectHandler());
 
     Button addP = new Button("Add Person");
     bottomMenu.getChildren().add(addP);
     addP.setOnAction(new AddPersonHandler());
+
+    Button findPath = new Button("Find friendship connection");
+    bottomMenu.getChildren().add(findPath);
+    findPath.setOnAction(new FindPathHandler());
 
     // Här är drop down menyn som ska ligga i vänstra hörnet:
     // Vi behöver handlers överallt
@@ -181,7 +186,7 @@ public class Gui extends Application {
     @Override
     public void handle(ActionEvent event) {
       // Skapar en dialogruta från klassen AddPersonGui
-      AddPersonGui addPersonGui = new AddPersonGui();
+      AddPersonGui addPersonGui = new AddPersonGui(allPersons);
       Optional<PersonImage> newPerson = addPersonGui.showAndWait();
       newPerson.ifPresent(person -> {
         allPersons.add(newPerson.get().getPerson());
@@ -241,6 +246,20 @@ public class Gui extends Application {
     @Override
     public void handle(MouseEvent event) {
       hasFocus = pi;
+    }
+  }
+
+  class FindPathHandler implements EventHandler<ActionEvent>{
+    @Override
+    public void handle(ActionEvent event){
+      new PathGui();
+    }
+  }
+
+  class ConnectHandler implements EventHandler<ActionEvent>{
+    @Override
+    public void handle(ActionEvent event){
+
     }
   }
 

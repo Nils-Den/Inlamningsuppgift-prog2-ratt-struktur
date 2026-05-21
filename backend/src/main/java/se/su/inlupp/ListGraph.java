@@ -126,6 +126,12 @@ public class ListGraph<T> implements Graph<T> {
     return null;
   }
 
+   // public T getPerson(String name){
+     // Iterator<T> iter = iterator();
+
+     // return ;
+    //}
+
   @Override
   public Iterator<T> iterator() {
     Iterator<T> iter = getNodes().iterator();

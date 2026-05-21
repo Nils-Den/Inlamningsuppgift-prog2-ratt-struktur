@@ -48,6 +48,7 @@ public class Person {
         return gender;
     }
 
+
     //public ImageView getImage(){
     //    return image;
     //}

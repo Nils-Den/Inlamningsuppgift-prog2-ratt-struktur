@@ -167,9 +167,9 @@ public class Gui extends Application {
   }
 
   public void load() {
-    Person nellie = new Person("Nellie Åkerström", 1998, "Kvinna");
-    Person erika = new Person("Erika Lundblad", 1995, "Kvinna");
-    Person nils = new Person("Nils Denward", 1995, "Man");
+    Person nellie = new Person("Nej", 1998, "Kvinna");
+    Person erika = new Person("Erk", 1995, "Kvinna");
+    Person nils = new Person("Nil", 1995, "Man");
     allPersons.add(nellie);
     allPersons.add(erika);
     allPersons.add(nils);

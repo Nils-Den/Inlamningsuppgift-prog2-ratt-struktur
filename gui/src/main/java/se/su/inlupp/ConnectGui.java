@@ -38,7 +38,7 @@ public class ConnectGui extends Dialog<Edge<Person>>{
                     name2 = nameFieldTwo.getText(),
                     rn = relationName.getText();
                     int score = Integer.parseInt(relationScore.getText());
-                    Edge<Person> newEdge = new EdgeClass(null, name2, score)
+                    Edge<Person> newEdge = new EdgeClass(null, name2, score);
 
                 }catch(Exception e){
                     e.printStackTrace();

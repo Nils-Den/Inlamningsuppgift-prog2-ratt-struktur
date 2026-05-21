@@ -17,7 +17,7 @@ public class AddPersonGui extends Dialog<PersonImage> {
             genderField = new TextField(),
             imageField = new TextField();
 
-    public AddPersonGui(ListGraph graph) {
+    public AddPersonGui(ListGraph<Person> graph) {
         setTitle("Add a new person!");
         setHeaderText(null);
 
@@ -37,15 +37,16 @@ public class AddPersonGui extends Dialog<PersonImage> {
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         setResultConverter(buttonType -> {
+            
             if (buttonType == ButtonType.OK) {
                 ArrayList <Person> list = new ArrayList<Person>(graph.getNodes());                
                 for(Person p : list ){
                     if(p.getName().equals(nameField.getText())){
                         new ErrorMessage<>("Name already exists");
+                        return null;
                     }
+                }               
                 }
-                
-                }//anropa alert för ej flera med samma namn
                 try {
                     String name = nameField.getText();
                     int yearOfBirth = Integer.parseInt(yearOfBirthField.getText());
@@ -63,11 +64,7 @@ public class AddPersonGui extends Dialog<PersonImage> {
                 } catch (Exception e) {
                     // Felmeddelande klassen ska in här!!!
                     return null;
-                }
-            }
-            return null;
-        });
-
+                }           
+        });           
     }
-
 }

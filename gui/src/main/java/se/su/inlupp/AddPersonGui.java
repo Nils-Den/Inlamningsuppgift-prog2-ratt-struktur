@@ -1,7 +1,7 @@
 package se.su.inlupp;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;

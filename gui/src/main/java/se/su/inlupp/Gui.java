@@ -1,6 +1,8 @@
 package se.su.inlupp;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +37,9 @@ import javafx.util.Duration;
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
 
-  private int[][] positions = { { 100, 130 }, { 250, 200 }, { 350, 50 } };
+  private int[][] positions = { { 100, 130 }, { 250, 200 }, { 350, 50 }, { 100, 270 }, { 30, 400 }, { 50, 250 } };
 
-  private PersonImage [] loadedData = new PersonImage [3];
+  private PersonImage [] loadedData = new PersonImage [6];
 
   private PersonImage personToAdd;
   private PersonImage hasFocus;
@@ -46,6 +48,10 @@ public class Gui extends Application {
   private Pane pane = new Pane();
 
   Label placePerson;
+
+  private HashMap<Person, PersonImage> personMap = new HashMap<>();
+
+  private HashMap <Person, List<Line>> edgeLines = new HashMap<>();
 
   public void start(Stage stage) {
 
@@ -147,6 +153,7 @@ public class Gui extends Application {
     pi.addEventHandler(MouseEvent.MOUSE_CLICKED, new FocusHandler(pi));
     pane.getChildren().add(pi);
     // new PersonImage(iv, p);
+    personMap.put(pi.getPerson(), pi);
 
 
   }
@@ -162,19 +169,31 @@ public class Gui extends Application {
       line.endYProperty().bind(pi2.layoutYProperty());
 
       pane.getChildren().add(line);
+
+      edgeLines.computeIfAbsent(pi1.getPerson(), k -> new ArrayList<>()).add(line);
+      edgeLines.computeIfAbsent(pi2.getPerson(), k -> new ArrayList<>()).add(line);
     }
 
   }
 
   public void load() {
-    Person nellie = new Person("Nej", 1998, "Kvinna");
-    Person erika = new Person("Erk", 1995, "Kvinna");
-    Person nils = new Person("Nil", 1995, "Man");
-    allPersons.add(nellie);
-    allPersons.add(erika);
-    allPersons.add(nils);
-    allPersons.connect(nellie, erika, "fiender", 10);
-    allPersons.connect(nellie, nils, "bästisar", 0);
+    Person father = new Person("Father", 1998, "Kvinna");
+    Person son = new Person("Son", 1995, "Kvinna");
+    Person hs = new Person("Holy Spirit", 1995, "Man");
+    Person devil = new Person("The Devil", 1995, "Man");
+    Person jesus = new Person("Jesus", 1995, "Man");
+    Person allah = new Person("Allah", 1995, "Man");
+    allPersons.add(father);
+    allPersons.add(son);
+    allPersons.add(hs);
+    allPersons.add(devil);
+    allPersons.add(jesus);
+    allPersons.add(allah);
+    allPersons.connect(father, son, "fiender", 10);
+    allPersons.connect(father, hs, "bästisar", 0);
+    allPersons.connect(son, devil, "bästisar", 0);
+    allPersons.connect(devil, jesus, "bästisar", 0);
+
 
   }
 
@@ -226,7 +245,9 @@ public class Gui extends Application {
       pane.getChildren().add(removePersonLabel);
       allPersons.remove(hasFocus.getPerson());
       pane.getChildren().remove(hasFocus);
-     
+      List<Line> lines = edgeLines.getOrDefault(hasFocus.getPerson(), new ArrayList<>());
+      pane.getChildren().removeAll(lines);
+      edgeLines.remove(hasFocus.getPerson());
 
       PauseTransition pause = new PauseTransition(Duration.seconds(3));
       pause.setOnFinished(e -> pane.getChildren().remove(removePersonLabel));
@@ -252,15 +273,28 @@ public class Gui extends Application {
   class FindPathHandler implements EventHandler<ActionEvent>{
     @Override
     public void handle(ActionEvent event){
-      new PathGui();
+      PathGui pathGui = new PathGui(allPersons);
+      Optional<Path<Person>> result = pathGui.showAndWait();
+      result.ifPresent(p -> {
+        PathResultGui pathResult = new PathResultGui(result.get());
+        pathResult.showAndWait();
+
+      });
+
     }
   }
 
   class ConnectHandler implements EventHandler<ActionEvent>{
     @Override
     public void handle(ActionEvent event){
-
+      ConnectGui connect = new ConnectGui(hasFocus, allPersons);
+      Optional<Person> result = connect.showAndWait();
+      result.ifPresent(p -> {
+        PersonImage otherPerson = personMap.get(p);
+        drawEdge(hasFocus, otherPerson);
+      });
     }
   }
+
 
 }

@@ -31,7 +31,7 @@ public class PersonImage extends BorderPane {
         this.image.setFitWidth(100);
         this.image.setFitHeight(100);
         setCenter(this.image);
-        setBackground(Background.fill(Color.BLUE));
+        setBackground(Background.fill(Color.BLANCHEDALMOND));
         Label nameBar = new Label(this.person.getName());
         HBox nameBox = new HBox(nameBar);
         nameBox.setAlignment(Pos.TOP_CENTER);
@@ -53,7 +53,7 @@ public class PersonImage extends BorderPane {
                 nameBox.setBackground(Background.fill(Color.CORAL));
             }
             else{
-                nameBox.setBackground(Background.fill(Color.BLUE));
+                nameBox.setBackground(Background.fill(Color.BLANCHEDALMOND));
             }
         });
     }
@@ -65,6 +65,10 @@ public class PersonImage extends BorderPane {
     public ImageView getImage() {
         return this.image;
     }
+
+    //public static PersonImage getPersonImage(String name){
+
+    //}
 
    /*  public double [] getCoordinates(){
         double [] coordinates = {startX, startY};

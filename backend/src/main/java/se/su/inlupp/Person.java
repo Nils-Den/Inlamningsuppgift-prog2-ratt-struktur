@@ -48,6 +48,25 @@ public class Person {
         return gender;
     }
 
+    public String toString(){
+        return name + " " + yearOfBirth + " " + gender;
+    }
+    @Override
+    public boolean equals(Object o){
+        if (this == o){
+            return true;
+        }
+        if (!(o instanceof Person)){
+            return false;
+        }
+        Person other = (Person)o;
+        return name.equals(other.name);
+    }
+
+    public int hashCode(){
+        return name.hashCode();
+    }
+
 
     //public ImageView getImage(){
     //    return image;

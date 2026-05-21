@@ -61,7 +61,7 @@ public class PathClass<T> implements Path<T> {
         String returnString = "Start node: " + startNode + " End node: " + endNode + "\n";
         StringBuilder sb = new StringBuilder(returnString);
         for(T e : getNodes()){
-            if(e != startNode || e != endNode){
+            if(e != startNode && e != endNode){
                sb.append(e).append(", ");  
             }
         }

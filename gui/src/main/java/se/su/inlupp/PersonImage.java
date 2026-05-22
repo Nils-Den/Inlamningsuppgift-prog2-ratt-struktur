@@ -60,8 +60,13 @@ public class PersonImage extends BorderPane {
         return this.person;
     }
 
-    public ImageView getImage() {
+    public ImageView getImageView() {
         return this.image;
+    }
+
+    public String getImagePath(){
+        Image returnImage = image.getImage();
+        return returnImage.getUrl();
     }
 
     //public static PersonImage getPersonImage(String name){

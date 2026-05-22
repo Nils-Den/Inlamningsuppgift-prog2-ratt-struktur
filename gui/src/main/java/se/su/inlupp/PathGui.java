@@ -43,10 +43,10 @@ public class PathGui extends Dialog<Path<Person>>{
                     name2 = nameFieldTwo.getText();
                     RadioButton selected = (RadioButton) group.getSelectedToggle();
                     if (selected == BFS){
-                        BFSPathFinder<Person> pathFinder = new BFSPathFinder<>();
+                        PathFinder<Person> pathFinder = new BFSPathFinder<>();
                         return pathFinder.findPath(graph, graph.getPerson(name1), graph.getPerson(name2));
                     }else {
-                        DFSPathFinder<Person> pathFinder = new DFSPathFinder<>();
+                        PathFinder<Person> pathFinder = new DFSPathFinder<>();
                         return pathFinder.findPath(graph, graph.getPerson(name1), graph.getPerson(name2));
                     }
 

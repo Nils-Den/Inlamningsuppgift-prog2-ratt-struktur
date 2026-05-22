@@ -15,7 +15,7 @@ public class PathResultGui extends Dialog<String> {
         grid.setHgap(10);
         grid.setVgap(5);
 
-        grid.addRow(0, new Label("Your journey: ", new Label (path.toString())));
+        grid.addRow(0, new Label (path.toString()));
         getDialogPane().setContent(grid);
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
     }

@@ -1,8 +1,18 @@
 package se.su.inlupp;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javafx.animation.PauseTransition;
@@ -13,6 +23,7 @@ import javafx.geometry.Insets;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -24,15 +35,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
 
+  private boolean changed = false;
+
+  private Stage stage;
+
+  private FileChooser fileChooser = new FileChooser();
+
   private int[][] positions = { { 100, 130 }, { 250, 200 }, { 350, 50 }, { 100, 270 }, { 30, 400 }, { 50, 250 } };
 
-  private PersonImage [] loadedData = new PersonImage [6];
+  private PersonImage[] loadedData = new PersonImage[6];
 
   private PersonImage personToAdd;
   private PersonImage hasFocus;
@@ -44,7 +62,7 @@ public class Gui extends Application {
 
   private HashMap<Person, PersonImage> personMap = new HashMap<>();
 
-  private HashMap <Person, List<Line>> edgeLines = new HashMap<>();
+  private HashMap<Person, List<Line>> edgeLines = new HashMap<>();
 
   public void start(Stage stage) {
 
@@ -91,7 +109,7 @@ public class Gui extends Application {
 
     MenuItem saveItem = new MenuItem("Save");
     menu.getItems().add(saveItem);
-    // saveItem.setOnAction(new SaveHandler());
+    saveItem.setOnAction(new SaveHandler());
 
     MenuItem exitItem = new MenuItem("Exit");
     menu.getItems().add(exitItem);
@@ -99,14 +117,14 @@ public class Gui extends Application {
 
     MenuItem openItem = new MenuItem("Open");
     menu.getItems().add(openItem);
-    // openItem.setOnAction(new OpenHandler());
+    openItem.setOnAction(new LoadHandler());
 
     MenuItem addPItem = new MenuItem("Add Person");
     menu.getItems().add(addPItem);
     addPItem.setOnAction(new AddPersonHandler());
 
     // HÄR TESTAR VI KOD:
-    load();
+    loadData();
     int i = 0;
 
     for (Person p : allPersons) {
@@ -117,18 +135,17 @@ public class Gui extends Application {
       loadedData[i] = pi;
       i++;
 
-    } 
-    for(int n = 0; n < loadedData.length; n++){
-      //Collection <Edge<Person>> edges= allPersons.getEdgesFrom(loadedData[n].getPerson());
-      for (int x = 0; x < loadedData.length; x++){
+    }
+    for (int n = 0; n < loadedData.length; n++) {
+      // Collection <Edge<Person>> edges=
+      // allPersons.getEdgesFrom(loadedData[n].getPerson());
+      for (int x = 0; x < loadedData.length; x++) {
         allPersons.getEdgeBetween(loadedData[n].getPerson(), loadedData[x].getPerson());
-        if (allPersons.getEdgeBetween(loadedData[n].getPerson(), loadedData[x].getPerson()) != null){
+        if (allPersons.getEdgeBetween(loadedData[n].getPerson(), loadedData[x].getPerson()) != null) {
           drawEdge(loadedData[n], loadedData[x]);
         }
       }
-        
-      
-      
+
     }
 
     Scene scene = new Scene(root, 640, 480);
@@ -148,13 +165,12 @@ public class Gui extends Application {
     // new PersonImage(iv, p);
     personMap.put(pi.getPerson(), pi);
 
-
   }
 
-  public void drawEdge(PersonImage pi1, PersonImage pi2 ){
-    if(allPersons.getEdgeBetween(pi1.getPerson(), pi2.getPerson()) != null){
-     // double [] pos1 = pi1.getCoordinates();
-      //double [] pos2 = pi2.getCoordinates();
+  public void drawEdge(PersonImage pi1, PersonImage pi2) {
+    if (allPersons.getEdgeBetween(pi1.getPerson(), pi2.getPerson()) != null) {
+      // double [] pos1 = pi1.getCoordinates();
+      // double [] pos2 = pi2.getCoordinates();
       Line line = new Line();
       line.startXProperty().bind(pi1.layoutXProperty());
       line.startYProperty().bind(pi1.layoutYProperty());
@@ -169,7 +185,83 @@ public class Gui extends Application {
 
   }
 
-  public void load() {
+  public void save(String fileName) {
+    try {
+      FileWriter fileWriter = new FileWriter(fileName);
+      PrintWriter printWriter = new PrintWriter(fileWriter);
+      for (Person p : allPersons) {
+        PersonImage pi = personMap.get(p);
+        printWriter.println(p.getName() + ";" + p.getYearOfBirth() + ";" + p.getGender() + ";" + pi.getLayoutX() + ";"
+            + pi.getLayoutY() + ";" + pi.getImagePath());
+
+      }
+      for (Person p : allPersons) {
+        for (Edge<Person> e : allPersons.getEdgesFrom(p)) {
+          printWriter.println(
+              "EDGE;" + p.getName() + ";" + e.getDestination().getName() + ";" + e.getName() + ";" + e.getWeight());
+        }
+      }
+      printWriter.close();
+      fileWriter.close();
+    } catch (FileNotFoundException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR, "Can't open file");
+      alert.showAndWait();
+    } catch (IOException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
+      alert.showAndWait();
+    }
+
+  }
+
+  public void open(String fileName){
+    try {
+      FileReader fileReader = new FileReader(fileName);
+      BufferedReader reader = new BufferedReader(fileReader);
+      Map<PersonImage, Edge<Person>> personImages = new HashMap<>();
+      String line;
+      while ((line = reader.readLine()) != null){
+        String[] split = parseLine(line);
+        if (!split[0].equals("EDGE")){
+        //for (int i = 0; i < split.length; i++){
+          String name = split[0];
+          int year = Integer.parseInt(split[1]);
+          String gender = split[2];
+          double layoutX = Double.parseDouble(split[3]);
+          double layoutY = Double.parseDouble(split[4]);
+          //Image image = split[5];
+          Person newPerson = new Person(name, year, gender);
+          PersonImage newPersonImage = new PersonImage(newPerson, image);
+          personMap.put(newPerson, newPersonImage);
+          allPersons.add(newPerson);
+          drawPerson(newPersonImage, layoutX, layoutY);
+        }else {
+          allPersons.connect(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]), split[3], Integer.parseInt(split[4]));
+          Edge<Person> newEdge = allPersons.getEdgeBetween(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]));
+          edgeLines.put(allPersons.getPerson(split[1]), newEdge);
+
+
+          //connect(T node1, T node2, String name, int weight)
+          //EDGE;Holy Spirit;Father;bästisar;0
+        }
+
+          //Holy Spirit;1995;Man;534.0;180.0;null
+        //}
+        
+        //personImages.add(parseLine(line));
+
+      }
+      System.out.println(personImages);
+    }
+  }
+
+  private String[] parseLine(String line){
+    String[] split = line.split(";");
+    return split;
+
+  }
+
+
+  public void loadData() {
     Person father = new Person("Father", 1998, "Kvinna");
     Person son = new Person("Son", 1995, "Kvinna");
     Person hs = new Person("Holy Spirit", 1995, "Man");
@@ -186,7 +278,6 @@ public class Gui extends Application {
     allPersons.connect(father, hs, "bästisar", 0);
     allPersons.connect(son, devil, "bästisar", 0);
     allPersons.connect(devil, jesus, "bästisar", 0);
-
 
   }
 
@@ -263,9 +354,9 @@ public class Gui extends Application {
     }
   }
 
-  class FindPathHandler implements EventHandler<ActionEvent>{
+  class FindPathHandler implements EventHandler<ActionEvent> {
     @Override
-    public void handle(ActionEvent event){
+    public void handle(ActionEvent event) {
       PathGui pathGui = new PathGui(allPersons);
       Optional<Path<Person>> result = pathGui.showAndWait();
       result.ifPresent(p -> {
@@ -277,9 +368,9 @@ public class Gui extends Application {
     }
   }
 
-  class ConnectHandler implements EventHandler<ActionEvent>{
+  class ConnectHandler implements EventHandler<ActionEvent> {
     @Override
-    public void handle(ActionEvent event){
+    public void handle(ActionEvent event) {
       ConnectGui connect = new ConnectGui(hasFocus, allPersons);
       Optional<Person> result = connect.showAndWait();
       result.ifPresent(p -> {
@@ -289,5 +380,26 @@ public class Gui extends Application {
     }
   }
 
+  class SaveHandler implements EventHandler<ActionEvent> {
+    @Override
+    public void handle(ActionEvent event) {
+      File file = fileChooser.showSaveDialog(stage);
+      if (file != null) {
+        save(file.getAbsolutePath());
+        changed = false;
+      }
+    }
+  }
+
+  class LoadHandler implements EventHandler<ActionEvent> {
+    @Override
+    public void handle(ActionEvent event) {
+      File file = fileChooser.showOpenDialog(stage);
+      if (file != null){
+        open(file.getAbsolutePath());
+
+      }
+    }
+  }
 
 }

@@ -42,7 +42,7 @@ public class AddPersonGui extends Dialog<PersonImage> {
                 ArrayList <Person> list = new ArrayList<Person>(graph.getNodes());                
                 for(Person p : list ){
                     if(p.getName().equals(nameField.getText())){
-                        new ErrorMessage<>("Name already exists");
+                        new ErrorMessage<>("Username already exists");
                         return null;
                     }
                 }               

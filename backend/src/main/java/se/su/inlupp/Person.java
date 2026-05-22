@@ -44,12 +44,16 @@ public class Person {
         return year - yearOfBirth;
     }
 
+    public int getYearOfBirth(){
+        return this.yearOfBirth;
+    }
+
     public String getGender() {
         return gender;
     }
 
     public String toString(){
-        return name + " " + yearOfBirth + " " + gender;
+        return name + ", " + yearOfBirth + ", " + gender;
     }
     @Override
     public boolean equals(Object o){

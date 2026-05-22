@@ -1,6 +1,6 @@
 package se.su.inlupp;
 
-import java.beans.EventHandler;
+import javafx.event.EventHandler;
 import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
@@ -9,8 +9,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 public class AddPersonGui extends Dialog<PersonImage> {
 
@@ -19,6 +25,8 @@ public class AddPersonGui extends Dialog<PersonImage> {
             genderField = new TextField();
     
     private Button imageButton = new Button("Choose picture");
+    private boolean pictureAdded = false;
+    private Image profile;
 
     
     //removeP.setOnAction(new RemoveHandler());
@@ -63,11 +71,11 @@ public class AddPersonGui extends Dialog<PersonImage> {
                     String gender = genderField.getText();
                     // Hur gör vi. med Image?? en till If sats?
                     Person newPerson = new Person(name, yearOfBirth, gender);
-                    if (imageField.getText().isEmpty()) {
+                    if (pictureAdded) {
                         PersonImage newPersonImage = new PersonImage(null, newPerson);
                         return newPersonImage;
                     } else {
-                        ImageView profilePic = new ImageView(imageField.getText());
+                        String profilePic = profile.getUrl();
                         PersonImage newPersonImage = new PersonImage(profilePic, newPerson);
                         return newPersonImage;
                     }
@@ -82,7 +90,15 @@ public class AddPersonGui extends Dialog<PersonImage> {
   class ImageHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            handle(event);
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(getOwner());
+            if(file != null){
+                //FileReader filereader = new FileReader(file);
+               // BufferedReader bufferedReader = new BufferedReader(filereader);
+                Image profile = new Image(Person.class.getResourceAsStream(file.getAbsolutePath()));
+                pictureAdded = true;
+            }
+
         }   
     }
    

@@ -18,13 +18,17 @@ public class PersonImage extends BorderPane {
     double startX;
     double startY;
 
-    public PersonImage(ImageView image, Person person) {
+
+    public PersonImage(String image, Person person) {
+        Image profilePic;
         if (image == null){
-            Image profilePic = new Image (Person.class.getResourceAsStream("idea.png"));
-            this.image = new ImageView(profilePic);
+            profilePic = new Image (Person.class.getResourceAsStream("idea.png"));
+            
         }else {
-        this.image = image;
+         profilePic = new Image (Person.class.getResourceAsStream(image));
         }
+        this.image = new ImageView(profilePic); 
+
         this.person = person;
         this.image.setFitWidth(100);
         this.image.setFitHeight(100);

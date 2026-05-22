@@ -228,16 +228,21 @@ public class Gui extends Application {
           String gender = split[2];
           double layoutX = Double.parseDouble(split[3]);
           double layoutY = Double.parseDouble(split[4]);
-          //Image image = split[5];
+          String imageUrl = split[5];
           Person newPerson = new Person(name, year, gender);
-          PersonImage newPersonImage = new PersonImage(newPerson, image);
+          PersonImage newPersonImage = new PersonImage(imageUrl, newPerson);
           personMap.put(newPerson, newPersonImage);
           allPersons.add(newPerson);
           drawPerson(newPersonImage, layoutX, layoutY);
         }else {
           allPersons.connect(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]), split[3], Integer.parseInt(split[4]));
-          Edge<Person> newEdge = allPersons.getEdgeBetween(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]));
-          edgeLines.put(allPersons.getPerson(split[1]), newEdge);
+          drawEdge(personMap.get(allPersons.getPerson(split[1])), personMap.get(allPersons.getPerson(split[2])));
+
+
+
+          //Edge<Person> newEdge = allPersons.getEdgeBetween(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]));
+
+          //edgeLines.put(allPersons.getPerson(split[1]), newEdge);
 
 
           //connect(T node1, T node2, String name, int weight)
@@ -251,6 +256,12 @@ public class Gui extends Application {
 
       }
       System.out.println(personImages);
+    } catch (FileNotFoundException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR, "Can't open file");
+      alert.showAndWait();
+    } catch (IOException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
+      alert.showAndWait();
     }
   }
 

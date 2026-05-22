@@ -1,8 +1,10 @@
 package se.su.inlupp;
 
+import java.beans.EventHandler;
 import java.util.ArrayList;
 
-
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -14,8 +16,15 @@ public class AddPersonGui extends Dialog<PersonImage> {
 
     private TextField nameField = new TextField(),
             yearOfBirthField = new TextField(),
-            genderField = new TextField(),
-            imageField = new TextField();
+            genderField = new TextField();
+    
+    private Button imageButton = new Button("Choose picture");
+
+    
+    //removeP.setOnAction(new RemoveHandler());
+
+            
+    
 
     public AddPersonGui(ListGraph<Person> graph) {
         setTitle("Add a new person!");
@@ -28,7 +37,8 @@ public class AddPersonGui extends Dialog<PersonImage> {
         grid.addRow(0, new Label("* Username:"), nameField);
         grid.addRow(1, new Label("* Year of birth:"), yearOfBirthField);
         grid.addRow(2, new Label("* Gender:"), genderField);
-        grid.addRow(3, new Label("Image:"), imageField); // Hur löser vi bildinmatningen snyggt?
+        grid.addRow(3, new Label("Choose profile picture:"), imageButton );
+        imageButton.setOnAction(new ImageHandler());
         grid.addRow(4, new Label(""));
         grid.addRow(5, new Label("* Requiered field"));
 
@@ -65,6 +75,15 @@ public class AddPersonGui extends Dialog<PersonImage> {
                     // Felmeddelande klassen ska in här!!!
                     return null;
                 }           
-        });           
+        });
+        
+       
     }
+  class ImageHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            handle(event);
+        }   
+    }
+   
 }

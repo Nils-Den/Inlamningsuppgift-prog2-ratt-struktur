@@ -11,12 +11,15 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,6 +28,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -37,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 public class Gui extends Application {
@@ -67,6 +72,8 @@ public class Gui extends Application {
   public void start(Stage stage) {
 
     BorderPane root = new BorderPane();
+
+    this.stage = stage;
 
     root.setCenter(pane);
 
@@ -113,7 +120,7 @@ public class Gui extends Application {
 
     MenuItem exitItem = new MenuItem("Exit");
     menu.getItems().add(exitItem);
-    // exitItem.setOnAction(new ExitHandler());
+    exitItem.setOnAction(new ExitItemHandler());
 
     MenuItem openItem = new MenuItem("Open");
     menu.getItems().add(openItem);
@@ -151,6 +158,7 @@ public class Gui extends Application {
     Scene scene = new Scene(root, 640, 480);
     stage.setScene(scene);
     stage.show();
+    stage.setOnCloseRequest(new ExitHandler());
   }
 
   public void drawPerson(PersonImage pi, double x, double y) {
@@ -189,6 +197,8 @@ public class Gui extends Application {
     try {
       FileWriter fileWriter = new FileWriter(fileName);
       PrintWriter printWriter = new PrintWriter(fileWriter);
+      Set<Person> visited = new HashSet<>();
+
       for (Person p : allPersons) {
         PersonImage pi = personMap.get(p);
         printWriter.println(p.getName() + ";" + p.getYearOfBirth() + ";" + p.getGender() + ";" + pi.getLayoutX() + ";"
@@ -197,9 +207,13 @@ public class Gui extends Application {
       }
       for (Person p : allPersons) {
         for (Edge<Person> e : allPersons.getEdgesFrom(p)) {
-          printWriter.println(
-              "EDGE;" + p.getName() + ";" + e.getDestination().getName() + ";" + e.getName() + ";" + e.getWeight());
+          if (!visited.contains(e.getDestination())) {
+            printWriter.println(
+
+                "EDGE;" + p.getName() + ";" + e.getDestination().getName() + ";" + e.getName() + ";" + e.getWeight());
+          }
         }
+        visited.add(p);
       }
       printWriter.close();
       fileWriter.close();
@@ -213,48 +227,56 @@ public class Gui extends Application {
 
   }
 
-  public void open(String fileName){
+  public void open(String fileName) {
     try {
       FileReader fileReader = new FileReader(fileName);
       BufferedReader reader = new BufferedReader(fileReader);
       Map<PersonImage, Edge<Person>> personImages = new HashMap<>();
       String line;
-      while ((line = reader.readLine()) != null){
+      pane.getChildren().clear();
+      allPersons = new ListGraph<>();
+      personMap.clear();
+      edgeLines.clear();
+      while ((line = reader.readLine()) != null) {
         String[] split = parseLine(line);
-        if (!split[0].equals("EDGE")){
-        //for (int i = 0; i < split.length; i++){
+        if (!split[0].equals("EDGE")) {
+          // for (int i = 0; i < split.length; i++){
           String name = split[0];
           int year = Integer.parseInt(split[1]);
           String gender = split[2];
           double layoutX = Double.parseDouble(split[3]);
           double layoutY = Double.parseDouble(split[4]);
-          String imageUrl = split[5];
+          String imageUrl = null;
+          if (!split[5].equals("null")) {
+            imageUrl = split[5];
+          }
           Person newPerson = new Person(name, year, gender);
           PersonImage newPersonImage = new PersonImage(imageUrl, newPerson);
           personMap.put(newPerson, newPersonImage);
           allPersons.add(newPerson);
           drawPerson(newPersonImage, layoutX, layoutY);
-        }else {
-          allPersons.connect(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]), split[3], Integer.parseInt(split[4]));
+        } else {
+          allPersons.connect(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]), split[3],
+              Integer.parseInt(split[4]));
           drawEdge(personMap.get(allPersons.getPerson(split[1])), personMap.get(allPersons.getPerson(split[2])));
 
+          // Edge<Person> newEdge =
+          // allPersons.getEdgeBetween(allPersons.getPerson(split[1]),
+          // allPersons.getPerson(split[2]));
 
+          // edgeLines.put(allPersons.getPerson(split[1]), newEdge);
 
-          //Edge<Person> newEdge = allPersons.getEdgeBetween(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]));
-
-          //edgeLines.put(allPersons.getPerson(split[1]), newEdge);
-
-
-          //connect(T node1, T node2, String name, int weight)
-          //EDGE;Holy Spirit;Father;bästisar;0
+          // connect(T node1, T node2, String name, int weight)
+          // EDGE;Holy Spirit;Father;bästisar;0
         }
 
-          //Holy Spirit;1995;Man;534.0;180.0;null
-        //}
-        
-        //personImages.add(parseLine(line));
+        // Holy Spirit;1995;Man;534.0;180.0;null
+        // }
+
+        // personImages.add(parseLine(line));
 
       }
+      reader.close();
       System.out.println(personImages);
     } catch (FileNotFoundException e) {
       Alert alert = new Alert(Alert.AlertType.ERROR, "Can't open file");
@@ -265,12 +287,11 @@ public class Gui extends Application {
     }
   }
 
-  private String[] parseLine(String line){
+  private String[] parseLine(String line) {
     String[] split = line.split(";");
     return split;
 
   }
-
 
   public void loadData() {
     Person father = new Person("Father", 1998, "Kvinna");
@@ -315,6 +336,7 @@ public class Gui extends Application {
         pane.getChildren().add(placePerson);
         pane.setOnMouseClicked(new PlacePersonHandler());
       }
+      changed = true;
 
     }
   }
@@ -327,7 +349,7 @@ public class Gui extends Application {
       drawPerson(personToAdd, x, y);
       pane.getChildren().remove(placePerson);
       pane.setOnMouseClicked(null);
-
+      changed = true;
     }
   }
 
@@ -347,7 +369,7 @@ public class Gui extends Application {
       PauseTransition pause = new PauseTransition(Duration.seconds(3));
       pause.setOnFinished(e -> pane.getChildren().remove(removePersonLabel));
       pause.play();
-
+      changed = true;
     }
 
   }
@@ -388,6 +410,7 @@ public class Gui extends Application {
         PersonImage otherPerson = personMap.get(p);
         drawEdge(hasFocus, otherPerson);
       });
+      changed = true;
     }
   }
 
@@ -406,11 +429,46 @@ public class Gui extends Application {
     @Override
     public void handle(ActionEvent event) {
       File file = fileChooser.showOpenDialog(stage);
-      if (file != null){
+      if (file != null) {
         open(file.getAbsolutePath());
 
       }
+      changed = false;
     }
+  }
+
+  class ExitItemHandler implements EventHandler<ActionEvent> {
+    @Override
+    public void handle(ActionEvent event) {
+      if (changed) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("You have unsaved changes, are you sure you want to quit?");
+        Optional<ButtonType> response = alert.showAndWait();
+        if (response.isPresent() && response.get().equals(ButtonType.CANCEL)) {
+          event.consume();
+        } else {
+          stage.close();
+        }
+      }else {
+        stage.close();
+      }
+
+    }
+  }
+
+  class ExitHandler implements EventHandler<WindowEvent> {
+    @Override
+    public void handle(WindowEvent event) {
+      if (changed) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("You have unsaved changes, are you sure you want to quit?");
+        Optional<ButtonType> response = alert.showAndWait();
+        if (response.isPresent() && response.get().equals(ButtonType.CANCEL)) {
+          event.consume();
+        }
+      }
+    }
+
   }
 
 }

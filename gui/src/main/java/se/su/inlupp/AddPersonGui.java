@@ -64,25 +64,26 @@ public class AddPersonGui extends Dialog<PersonImage> {
                         return null;
                     }
                 }               
-                }
+                
                 try {
                     String name = nameField.getText();
                     int yearOfBirth = Integer.parseInt(yearOfBirthField.getText());
                     String gender = genderField.getText();
                     // Hur gör vi. med Image?? en till If sats?
                     Person newPerson = new Person(name, yearOfBirth, gender);
-                    if (pictureAdded) {
+                    if (!pictureAdded) {
                         PersonImage newPersonImage = new PersonImage(null, newPerson);
                         return newPersonImage;
                     } else {
-                        String profilePic = profile.getUrl();
-                        PersonImage newPersonImage = new PersonImage(profilePic, newPerson);
+                        PersonImage newPersonImage = new PersonImage(profile.getUrl(), newPerson);
                         return newPersonImage;
                     }
                 } catch (Exception e) {
                     // Felmeddelande klassen ska in här!!!
                     return null;
-                }           
+                }   
+            }  
+            return null;      
         });
         
        
@@ -95,7 +96,7 @@ public class AddPersonGui extends Dialog<PersonImage> {
             if(file != null){
                 //FileReader filereader = new FileReader(file);
                // BufferedReader bufferedReader = new BufferedReader(filereader);
-                Image profile = new Image(Person.class.getResourceAsStream(file.getAbsolutePath()));
+                profile = new Image(file.toURI().toString());
                 pictureAdded = true;
             }
 

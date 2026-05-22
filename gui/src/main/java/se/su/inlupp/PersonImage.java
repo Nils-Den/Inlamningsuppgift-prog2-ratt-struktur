@@ -13,26 +13,28 @@ import javafx.scene.paint.Color;
 
 public class PersonImage extends BorderPane {
 
-    ImageView image;
+    ImageView imageView;
+    Image profilePic;
+    String imageUrl;
     Person person;
     double startX;
     double startY;
 
 
-    public PersonImage(String image, Person person) {
-        Image profilePic;
-        if (image == null){
+    public PersonImage(String imageUrl, Person person) {
+        this.imageUrl = imageUrl;
+        if (imageUrl == null){
             profilePic = new Image (Person.class.getResourceAsStream("idea.png"));
             
         }else {
-         profilePic = new Image (Person.class.getResourceAsStream(image));
+         profilePic = new Image (imageUrl);
         }
-        this.image = new ImageView(profilePic); 
+        this.imageView = new ImageView(profilePic); 
 
         this.person = person;
-        this.image.setFitWidth(100);
-        this.image.setFitHeight(100);
-        setCenter(this.image);
+        this.imageView.setFitWidth(100);
+        this.imageView.setFitHeight(100);
+        setCenter(this.imageView);
         setBackground(Background.fill(Color.BLANCHEDALMOND));
         Label nameBar = new Label(this.person.getName());
         HBox nameBox = new HBox(nameBar);
@@ -65,12 +67,11 @@ public class PersonImage extends BorderPane {
     }
 
     public ImageView getImageView() {
-        return this.image;
+        return this.imageView;
     }
 
     public String getImagePath(){
-        Image returnImage = image.getImage();
-        return returnImage.getUrl();
+        return imageUrl;
     }
 
     //public static PersonImage getPersonImage(String name){

@@ -24,7 +24,7 @@ public class PersonImage extends BorderPane {
     public PersonImage(String imageUrl, Person person) {
         this.imageUrl = imageUrl;
         if (imageUrl == null){
-            profilePic = new Image (Person.class.getResourceAsStream("idea.png"));
+            profilePic = new Image (Person.class.getResourceAsStream("user.png"));
             
         }else {
          profilePic = new Image (imageUrl);

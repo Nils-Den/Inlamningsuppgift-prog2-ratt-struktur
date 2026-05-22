@@ -33,6 +33,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -76,6 +78,10 @@ public class Gui extends Application {
     this.stage = stage;
 
     root.setCenter(pane);
+
+    Image image = new Image(Gui.class.getResourceAsStream("background.png"));
+    ImageView imageView = new ImageView(image);
+    pane.getChildren().add(imageView);
 
     // Testa att rita linje
     // gc.strokeLine(50, 0, 50, 250);

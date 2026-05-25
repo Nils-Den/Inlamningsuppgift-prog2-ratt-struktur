@@ -33,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -47,8 +48,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import se.su.inlupp.Gui.ExitHandler;
-import se.su.inlupp.Gui.ExitItemHandler;
 
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
@@ -86,9 +85,6 @@ public class Gui extends Application {
     ImageView imageView = new ImageView(image);
     pane.getChildren().add(imageView);
 
-    // Testa att rita linje
-    // gc.strokeLine(50, 0, 50, 250);
-
     // Här börjar topmenyn med tillhörande knappar
     HBox bottomMenu = new HBox(15);
     bottomMenu.setPadding(new Insets(10, 10, 10, 10));
@@ -113,7 +109,6 @@ public class Gui extends Application {
     findPath.setOnAction(new FindPathHandler());
 
     // Här är drop down menyn som ska ligga i vänstra hörnet:
-    // Vi behöver handlers överallt
     VBox dropDown = new VBox();
     MenuBar menuBar = new MenuBar();
     dropDown.getChildren().add(menuBar);
@@ -153,8 +148,6 @@ public class Gui extends Application {
 
     }
     for (int n = 0; n < loadedData.length; n++) {
-      // Collection <Edge<Person>> edges=
-      // allPersons.getEdgesFrom(loadedData[n].getPerson());
       for (int x = 0; x < loadedData.length; x++) {
         allPersons.getEdgeBetween(loadedData[n].getPerson(), loadedData[x].getPerson());
         if (allPersons.getEdgeBetween(loadedData[n].getPerson(), loadedData[x].getPerson()) != null) {
@@ -337,6 +330,11 @@ public class Gui extends Application {
   class RemoveHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
+      if(hasFocus == null){
+        Alert alert = new Alert(Alert.AlertType.ERROR, "No person chosen!");
+        alert.showAndWait();
+        return;
+      }
       Label removePersonLabel = new Label("The person you have selected has been removed!");
       removePersonLabel.setBackground(Background.fill(Color.BLANCHEDALMOND));
 
@@ -416,7 +414,7 @@ public class Gui extends Application {
         Optional<ButtonType> response = alert.showAndWait();
         if (response.isPresent() && response.get().equals(ButtonType.CANCEL)) {
           event.consume();
-        } else {
+        } if(response.isPresent() && response.get().equals(ButtonType.OK)) {
           File file = fileChooser.showOpenDialog(stage);
           if (file != null) {
             open(file.getAbsolutePath());

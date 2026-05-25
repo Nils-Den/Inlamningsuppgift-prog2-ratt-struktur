@@ -38,6 +38,9 @@ public class ErrorMessage<T> extends Dialog<T> {
             if(message.equals("Score out of bounds, the score is set to the closest valid score")){
 
             }
+            if(message.equals("All required fields must be filled.")){
+                
+            }
         }
     }
 

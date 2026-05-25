@@ -46,19 +46,16 @@ public class PersonImage extends BorderPane {
         nameBox.setAlignment(Pos.TOP_CENTER);
         setTop(nameBox);
 
-        //setOnMouseClicked(new MarkedNode());
         setOnMousePressed(new StartDragHandler());
         setOnMouseDragged(new DragHandler());
 
         setOnMouseClicked((event) -> {
             nameBox.setBackground(Background.fill(Color.CORAL));
             requestFocus();
-            //hasFocus = this;
         });
         focusedProperty().addListener((obs, oldValue, newValue) -> {
             if(newValue){
                 requestFocus();
-                //hasFocus = this;
                 nameBox.setBackground(Background.fill(Color.CORAL));
             }
             else{
@@ -78,23 +75,6 @@ public class PersonImage extends BorderPane {
     public String getImagePath(){
         return imageUrl;
     }
-
-    //public static PersonImage getPersonImage(String name){
-
-    //}
-
-   /*  public double [] getCoordinates(){
-        double [] coordinates = {startX, startY};
-        return coordinates;
-    }
-*/
-/*    class MarkedNode implements EventHandler<MouseEvent> {
-        @Override
-        public void handle(MouseEvent event) {
-            setBackground(Background.fill(Color.AZURE));
-        }
-    } */
-
     class StartDragHandler implements EventHandler<MouseEvent>{
         @Override
         public void handle(MouseEvent event){

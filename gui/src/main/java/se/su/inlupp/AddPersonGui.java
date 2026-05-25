@@ -57,13 +57,11 @@ public class AddPersonGui extends Dialog<PersonImage> {
                         new ErrorMessage<>("Username already exists");
                         return null;
                     }
-                }               
-                
+                }                              
                 try {
                     String name = nameField.getText();
                     int yearOfBirth = Integer.parseInt(yearOfBirthField.getText());
                     String gender = genderField.getText();
-                    // Hur gör vi. med Image?? en till If sats?
                     Person newPerson = new Person(name, yearOfBirth, gender);
                     if (!pictureAdded) {
                         PersonImage newPersonImage = new PersonImage(null, newPerson);
@@ -73,7 +71,7 @@ public class AddPersonGui extends Dialog<PersonImage> {
                         return newPersonImage;
                     }
                 } catch (Exception e) {
-                    // Felmeddelande klassen ska in här!!!
+                    new ErrorMessage<>("All required fields must be filled.");
                     return null;
                 }   
             }  
@@ -88,8 +86,6 @@ public class AddPersonGui extends Dialog<PersonImage> {
             FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showOpenDialog(getOwner());
             if(file != null){
-                //FileReader filereader = new FileReader(file);
-               // BufferedReader bufferedReader = new BufferedReader(filereader);
                 profile = new Image(file.toURI().toString());
                 pictureAdded = true;
             }

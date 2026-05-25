@@ -108,7 +108,7 @@ public class ListGraph<T> implements Graph<T> {
     if (!graphMap.containsKey(node)) {
       throw new NoSuchElementException();
     }
-    Collection<Edge<T>> returnCollection = graphMap.get(node);
+    Collection<Edge<T>> returnCollection = new HashSet<>(graphMap.get(node));
     return returnCollection;
   }
 
@@ -126,11 +126,11 @@ public class ListGraph<T> implements Graph<T> {
     return null;
   }
 
-    public Person getPerson(String name){
+    public T getPerson(String name){
       Set<T> returnSet = getNodes();
       for (T t: returnSet){
         if (((Person)t).getName().equals(name)){
-          return (Person)t;
+          return (T)t;
         }
       }
 

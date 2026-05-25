@@ -66,7 +66,7 @@ public class Gui extends Application {
 
   private Pane pane = new Pane();
 
-  Label placePerson;
+  private Label placePerson;
 
   private HashMap<Person, PersonImage> personMap = new HashMap<>();
 
@@ -271,22 +271,22 @@ public class Gui extends Application {
   }
 
   public void loadData() {
-    Person father = new Person("Father", 1998, "Kvinna");
-    Person son = new Person("Son", 1995, "Kvinna");
-    Person hs = new Person("Holy Spirit", 1995, "Man");
-    Person devil = new Person("The Devil", 1995, "Man");
-    Person jesus = new Person("Jesus", 1995, "Man");
-    Person allah = new Person("Allah", 1995, "Man");
-    allPersons.add(father);
-    allPersons.add(son);
-    allPersons.add(hs);
-    allPersons.add(devil);
-    allPersons.add(jesus);
-    allPersons.add(allah);
-    allPersons.connect(father, son, "fiender", 100);
-    allPersons.connect(father, hs, "bästisar", 0);
-    allPersons.connect(son, devil, "kompis", 35);
-    allPersons.connect(devil, jesus, "kollegor", 78);
+    Person sauron = new Person("Sauron", 1998, "Man");
+    Person sam = new Person("Sam", 1995, "Man");
+    Person galadriel = new Person("Galadriel", 1995, "Kvinna");
+    Person arwen = new Person("Arwen", 1995, "Kvinna");
+    Person aragorn = new Person("Aragorn", 1995, "Man");
+    Person eowyn = new Person("Eowynn", 1995, "Kvinna");
+    allPersons.add(sauron);
+    allPersons.add(sam);
+    allPersons.add(galadriel);
+    allPersons.add(arwen);
+    allPersons.add(aragorn);
+    allPersons.add(eowyn);
+    allPersons.connect(sauron, sam, "fiender", 100);
+    allPersons.connect(sauron, galadriel, "bästisar", 0);
+    allPersons.connect(sam, arwen, "kompis", 35);
+    allPersons.connect(arwen, aragorn, "kollegor", 78);
   }
 
   public static void main(String[] args) {

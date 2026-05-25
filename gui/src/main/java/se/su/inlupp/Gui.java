@@ -48,6 +48,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import se.su.inlupp.Gui.ExitHandler;
+import se.su.inlupp.Gui.ExitItemHandler;
 
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
@@ -330,7 +332,7 @@ public class Gui extends Application {
   class RemoveHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
-      if(hasFocus == null){
+      if (hasFocus == null) {
         Alert alert = new Alert(Alert.AlertType.ERROR, "No person chosen!");
         alert.showAndWait();
         return;
@@ -384,6 +386,11 @@ public class Gui extends Application {
   class ConnectHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
+      if (hasFocus == null){
+        Alert alert = new Alert(Alert.AlertType.ERROR, "No person chosen!");
+        alert.showAndWait();
+        return;
+      }
       ConnectGui connect = new ConnectGui(hasFocus, allPersons);
       Optional<Person> result = connect.showAndWait();
       result.ifPresent(p -> {
@@ -409,8 +416,7 @@ public class Gui extends Application {
     @Override
     public void handle(ActionEvent event) {
       if (changed) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("You have unsaved changes.\nAre you sure you want to open a new file?");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes.\nAre you sure you want to open a new file?");
         Optional<ButtonType> response = alert.showAndWait();
         if (response.isPresent() && response.get().equals(ButtonType.CANCEL)) {
           event.consume();
@@ -421,6 +427,12 @@ public class Gui extends Application {
             changed = false;
           }
         }
+      }else {
+        File file = fileChooser.showOpenDialog(stage);
+          if (file != null) {
+            open(file.getAbsolutePath());
+            changed = false;
+          }
       }
     }
   }

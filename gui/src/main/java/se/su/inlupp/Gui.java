@@ -33,7 +33,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -48,8 +47,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import se.su.inlupp.Gui.ExitHandler;
-import se.su.inlupp.Gui.ExitItemHandler;
 
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();

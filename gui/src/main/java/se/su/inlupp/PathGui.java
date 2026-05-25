@@ -1,3 +1,8 @@
+//PROG2 VT2026, Inlämningsuppgift
+//Grupp 58
+//Nils Denward nide8018
+//Erika Lundblad erlu6715
+//Nellie Åkerström neak7375
 package se.su.inlupp;
 
 import javafx.scene.control.ButtonType;
@@ -31,7 +36,7 @@ public class PathGui extends Dialog<Path<Person>>{
         DFS.setToggleGroup(group);
         grid.addRow(2, BFS);
         grid.addRow(3, DFS);
-
+        DFS.setSelected(true);
 
         getDialogPane().setContent(grid);
 

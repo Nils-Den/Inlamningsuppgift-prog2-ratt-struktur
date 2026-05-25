@@ -13,7 +13,15 @@ public class EdgeClass<T> implements Edge<T> {
     public EdgeClass(T destination, String name, int weight){
         this.destination = destination;
         this.name = name;
+        if(weight > 100){
+            this.weight = 100;
+        }
+        else if(weight < 0){
+            this.weight = 0;
+        }
+        else{
         this.weight = weight;
+    }
     }
 
     public T getDestination() {

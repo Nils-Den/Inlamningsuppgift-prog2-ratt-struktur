@@ -1,3 +1,8 @@
+//PROG2 VT2026, Inlämningsuppgift
+//Grupp 58
+//Nils Denward nide8018
+//Erika Lundblad erlu6715
+//Nellie Åkerström neak7375
 package se.su.inlupp;
 
 import java.util.Optional;
@@ -29,6 +34,9 @@ public class ErrorMessage<T> extends Dialog<T> {
             }
             if (message.equals("These two people have no connection")){
                 
+            }
+            if(message.equals("Score out of bounds, the score is set to the closest valid score")){
+
             }
         }
     }

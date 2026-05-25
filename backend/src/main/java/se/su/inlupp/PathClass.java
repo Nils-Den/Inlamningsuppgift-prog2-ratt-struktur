@@ -58,12 +58,14 @@ public class PathClass<T> implements Path<T> {
 
     @Override
     public String toString() {
-        String returnString = "Your journey: ";
+        String returnString = "Friendship connection: ";
         StringBuilder sb = new StringBuilder(returnString);
+        int i = 0;
         for (T e : getNodes()) {
             sb.append("[").append(e).append("] ");
             if (e != endNode) {
-                sb.append(" -> ");
+                sb.append(" -> "+ edges.get(i).getName() +", "+ edges.get(i).getWeight()+ " -> ");
+            i++;
             }
         }
         sb.append("\nTotal score: " + getTotalWeight());

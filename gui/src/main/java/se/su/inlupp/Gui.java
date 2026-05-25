@@ -1,13 +1,16 @@
+//PROG2 VT2026, Inlämningsuppgift
+//Grupp 58
+//Nils Denward nide8018
+//Erika Lundblad erlu6715
+//Nellie Åkerström neak7375
 package se.su.inlupp;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,14 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -36,15 +36,19 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import se.su.inlupp.Gui.ExitHandler;
+import se.su.inlupp.Gui.ExitItemHandler;
 
 public class Gui extends Application {
   private ListGraph<Person> allPersons = new ListGraph<>();
@@ -55,13 +59,12 @@ public class Gui extends Application {
 
   private FileChooser fileChooser = new FileChooser();
 
-  private int[][] positions = { { 100, 130 }, { 250, 200 }, { 350, 50 }, { 100, 270 }, { 30, 400 }, { 50, 250 } };
+  private int[][] positions = { { 170, 132 }, { 471, 258 }, { 492, 110 }, { 293, 58 }, { 291, 272 }, { 97, 270 } };
 
   private PersonImage[] loadedData = new PersonImage[6];
 
   private PersonImage personToAdd;
   private PersonImage hasFocus;
-  // private Canvas canvas = new Canvas(640, 480);
 
   private Pane pane = new Pane();
 
@@ -79,7 +82,7 @@ public class Gui extends Application {
 
     root.setCenter(pane);
 
-    Image image = new Image(Gui.class.getResourceAsStream("background.png"));
+    Image image = new Image(Gui.class.getResourceAsStream("backgroundd.png"));
     ImageView imageView = new ImageView(image);
     pane.getChildren().add(imageView);
 
@@ -168,24 +171,17 @@ public class Gui extends Application {
   }
 
   public void drawPerson(PersonImage pi, double x, double y) {
-    // PersonImage pi = new PersonImage(p.getImage(), p);
-    // ImageView iv = new ImageView(p.getImage());
-
     pi.setLayoutX(x);
     pi.setLayoutY(y);
-    // pi.setPadding(new Insets(10, 10, 10, 10));
     pi.addEventHandler(MouseEvent.MOUSE_CLICKED, new FocusHandler(pi));
     pane.getChildren().add(pi);
-    // new PersonImage(iv, p);
     personMap.put(pi.getPerson(), pi);
-
   }
 
   public void drawEdge(PersonImage pi1, PersonImage pi2) {
     if (allPersons.getEdgeBetween(pi1.getPerson(), pi2.getPerson()) != null) {
-      // double [] pos1 = pi1.getCoordinates();
-      // double [] pos2 = pi2.getCoordinates();
       Line line = new Line();
+      line.setStroke(Color.CORAL);
       line.startXProperty().bind(pi1.layoutXProperty());
       line.startYProperty().bind(pi1.layoutYProperty());
       line.endXProperty().bind(pi2.layoutXProperty());
@@ -196,7 +192,6 @@ public class Gui extends Application {
       edgeLines.computeIfAbsent(pi1.getPerson(), k -> new ArrayList<>()).add(line);
       edgeLines.computeIfAbsent(pi2.getPerson(), k -> new ArrayList<>()).add(line);
     }
-
   }
 
   public void save(String fileName) {
@@ -246,7 +241,6 @@ public class Gui extends Application {
       while ((line = reader.readLine()) != null) {
         String[] split = parseLine(line);
         if (!split[0].equals("EDGE")) {
-          // for (int i = 0; i < split.length; i++){
           String name = split[0];
           int year = Integer.parseInt(split[1]);
           String gender = split[2];
@@ -265,22 +259,7 @@ public class Gui extends Application {
           allPersons.connect(allPersons.getPerson(split[1]), allPersons.getPerson(split[2]), split[3],
               Integer.parseInt(split[4]));
           drawEdge(personMap.get(allPersons.getPerson(split[1])), personMap.get(allPersons.getPerson(split[2])));
-
-          // Edge<Person> newEdge =
-          // allPersons.getEdgeBetween(allPersons.getPerson(split[1]),
-          // allPersons.getPerson(split[2]));
-
-          // edgeLines.put(allPersons.getPerson(split[1]), newEdge);
-
-          // connect(T node1, T node2, String name, int weight)
-          // EDGE;Holy Spirit;Father;bästisar;0
         }
-
-        // Holy Spirit;1995;Man;534.0;180.0;null
-        // }
-
-        // personImages.add(parseLine(line));
-
       }
       reader.close();
       System.out.println(personImages);
@@ -312,11 +291,10 @@ public class Gui extends Application {
     allPersons.add(devil);
     allPersons.add(jesus);
     allPersons.add(allah);
-    allPersons.connect(father, son, "fiender", 10);
+    allPersons.connect(father, son, "fiender", 100);
     allPersons.connect(father, hs, "bästisar", 0);
-    allPersons.connect(son, devil, "bästisar", 0);
-    allPersons.connect(devil, jesus, "bästisar", 0);
-
+    allPersons.connect(son, devil, "kompis", 35);
+    allPersons.connect(devil, jesus, "kollegor", 78);
   }
 
   public static void main(String[] args) {
@@ -326,7 +304,6 @@ public class Gui extends Application {
   class AddPersonHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
-      // Skapar en dialogruta från klassen AddPersonGui
       AddPersonGui addPersonGui = new AddPersonGui(allPersons);
       Optional<PersonImage> newPerson = addPersonGui.showAndWait();
       newPerson.ifPresent(person -> {
@@ -335,9 +312,7 @@ public class Gui extends Application {
       });
       if (!newPerson.isEmpty()) {
         placePerson = new Label("Click where you want to place the person!");
-        // gc.fillText("Click where you want to place the person!", 200, 25);
-
-        // Här hårdkodar vi positionen av labeln. Kan behöva snyggas till?
+        placePerson.setBackground(Background.fill(Color.BLANCHEDALMOND));
         placePerson.setLayoutX(200);
         pane.getChildren().add(placePerson);
         pane.setOnMouseClicked(new PlacePersonHandler());
@@ -363,6 +338,7 @@ public class Gui extends Application {
     @Override
     public void handle(ActionEvent event) {
       Label removePersonLabel = new Label("The person you have selected has been removed!");
+      removePersonLabel.setBackground(Background.fill(Color.BLANCHEDALMOND));
 
       removePersonLabel.setLayoutX(200);
       pane.getChildren().add(removePersonLabel);
@@ -434,12 +410,20 @@ public class Gui extends Application {
   class LoadHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
-      File file = fileChooser.showOpenDialog(stage);
-      if (file != null) {
-        open(file.getAbsolutePath());
-
+      if (changed) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("You have unsaved changes.\nAre you sure you want to open a new file?");
+        Optional<ButtonType> response = alert.showAndWait();
+        if (response.isPresent() && response.get().equals(ButtonType.CANCEL)) {
+          event.consume();
+        } else {
+          File file = fileChooser.showOpenDialog(stage);
+          if (file != null) {
+            open(file.getAbsolutePath());
+            changed = false;
+          }
+        }
       }
-      changed = false;
     }
   }
 
@@ -455,7 +439,7 @@ public class Gui extends Application {
         } else {
           stage.close();
         }
-      }else {
+      } else {
         stage.close();
       }
 

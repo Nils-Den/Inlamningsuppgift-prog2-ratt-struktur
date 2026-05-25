@@ -1,3 +1,8 @@
+//PROG2 VT2026, Inlämningsuppgift
+//Grupp 58
+//Nils Denward nide8018
+//Erika Lundblad erlu6715
+//Nellie Åkerström neak7375
 package se.su.inlupp;
 
 import java.util.ArrayList;
@@ -16,7 +21,7 @@ public class ConnectGui extends Dialog<Person> {
 
     public ConnectGui(PersonImage hasFocus, ListGraph<Person> graph) {
         setTitle("Write person to connect with!");
-        setHeaderText("Score your relationship on a scale from 0 to 10, where 0 is the best and 10 is the worst");
+        setHeaderText("Score your relationship on a scale from 0 to 100, where 0 is the best and 100 is the worst");
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -37,9 +42,9 @@ public class ConnectGui extends Dialog<Person> {
                     String personName = nameField.getText(),
                             rn = relationName.getText();
                     int score = Integer.parseInt(relationScore.getText());
-                    // Edge<Person> newEdge = new EdgeClass<Person>(hasFocus.getPerson(), rn,
-                    // score);
-
+                    if(score < 0 || score > 100){
+                        new ErrorMessage<>("Score out of bounds, the score is set to the closest valid score");
+                    }
                     ArrayList<Person> list = new ArrayList<Person>(graph.getNodes());
                                                                                                                                                                     
                     if (!list.contains(graph.getPerson(personName))) {

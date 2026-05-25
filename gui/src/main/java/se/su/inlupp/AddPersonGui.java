@@ -1,8 +1,12 @@
+//PROG2 VT2026, Inlämningsuppgift
+//Grupp 58
+//Nils Denward nide8018
+//Erika Lundblad erlu6715
+//Nellie Åkerström neak7375
 package se.su.inlupp;
 
 import javafx.event.EventHandler;
 import java.util.ArrayList;
-
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -10,13 +14,9 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 
 public class AddPersonGui extends Dialog<PersonImage> {
 
@@ -27,12 +27,6 @@ public class AddPersonGui extends Dialog<PersonImage> {
     private Button imageButton = new Button("Choose picture");
     private boolean pictureAdded = false;
     private Image profile;
-
-    
-    //removeP.setOnAction(new RemoveHandler());
-
-            
-    
 
     public AddPersonGui(ListGraph<Person> graph) {
         setTitle("Add a new person!");

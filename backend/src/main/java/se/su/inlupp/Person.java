@@ -7,32 +7,15 @@ package se.su.inlupp;
 
 import java.time.Year;
 
-//import javafx.scene.image.Image;
-//MÅSTE TA BORT IMAGE VIEW
-//import javafx.scene.image.ImageView;
-
 public class Person {
     private String name;
     private int yearOfBirth;
     private String gender;
-    //private ImageView image;
-
-
-    //KOLLA DETTA IGEN IMAGE/IMAGEVIEW OCH GETRESOURCES AS STREAM
-    //MÅSTE TA BORT IMAGE VIEW
-    //public Person(String name, int yearOfBirth, String gender, Image image) {
-      //  this(name, yearOfBirth, gender);
-        //this.image = new ImageView(image);
-   //}
     
     public Person(String name, int yearOfBirth, String gender) {
         this.name = name;
         this.yearOfBirth = yearOfBirth;
         this.gender = gender;
-        //if (image == null){
-        //    Image profilePic = new Image (Person.class.getResourceAsStream("idea.png"));
-         //   this.image = new ImageView(profilePic);
-        //}
     }
 
     public String getName() {
@@ -52,9 +35,6 @@ public class Person {
         return gender;
     }
 
-    public String toString(){
-        return name + ", " + yearOfBirth + ", " + gender;
-    }
     @Override
     public boolean equals(Object o){
         if (this == o){
@@ -71,8 +51,7 @@ public class Person {
         return name.hashCode();
     }
 
-
-    //public ImageView getImage(){
-    //    return image;
-    //}
+    public String toString(){
+        return name + ", " + yearOfBirth + ", " + gender;
+    }
 }
